@@ -44,8 +44,7 @@ export interface LoginResponse {
       email: string;
       displayName: string;
       photoURL?: string;
-      role: string;
-      provider: string;
+      providers: Array<"email" | "google" | "facebook">;
       emailVerified: boolean;
       createdAt: {
         _seconds: number;
@@ -88,8 +87,7 @@ export interface User {
   email: string;
   displayName: string;
   photoURL?: string;
-  role: string;
-  provider: string;
+  providers: Array<"email" | "google" | "facebook">;
   emailVerified: boolean;
   createdAt: {
     _seconds: number;

@@ -6,7 +6,9 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   signOut,
+  linkWithCredential,
   Auth,
+  AuthCredential,
 } from "firebase/auth";
 
 const firebaseConfig = {
@@ -45,6 +47,38 @@ export const signInWithFacebook = async () => {
 
 export const signOutUser = async () => {
   return await signOut(auth);
+};
+
+// Helper function to get user role from custom claims
+export const getUserRole = async (): Promise<string | null> => {
+  const currentUser = auth.currentUser;
+  if (!currentUser) return null;
+
+  const idTokenResult = await currentUser.getIdTokenResult();
+  return (idTokenResult.claims.role as string) || null;
+};
+
+/**
+ * Link account with pending credential
+ * This should be called AFTER user has manually signed in with the existing provider
+ */
+export const linkCredentialToCurrentUser = async (
+  pendingCredential: AuthCredential
+) => {
+  const currentUser = auth.currentUser;
+
+  if (!currentUser) {
+    throw new Error("No user is currently signed in");
+  }
+
+  try {
+    await linkWithCredential(currentUser, pendingCredential);
+    console.log("Successfully linked accounts!");
+    return currentUser;
+  } catch (linkError) {
+    console.error("Failed to link credential:", linkError);
+    throw linkError;
+  }
 };
 
 export default app;

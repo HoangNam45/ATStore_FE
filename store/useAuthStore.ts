@@ -1,6 +1,36 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { AuthState } from "@/types/auth.types";
+
+interface User {
+  uid: string;
+  email: string;
+  displayName: string;
+  photoURL?: string;
+  role?: string;
+  providers: Array<"email" | "google" | "facebook">;
+  emailVerified: boolean;
+  createdAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  updatedAt: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+  lastLoginAt?: {
+    _seconds: number;
+    _nanoseconds: number;
+  };
+}
+
+interface AuthState {
+  user: User | null;
+  isLoggedIn: boolean;
+  setUser: (user: User | null) => void;
+  logout: () => void;
+  getInitials: () => string;
+  isUserOwner: () => boolean;
+}
 
 export const useAuthStore = create<AuthState>()(
   persist(

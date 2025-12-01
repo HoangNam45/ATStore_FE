@@ -35,21 +35,21 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-border/50 bg-card/80 backdrop-blur-md">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4">
+      <header className="sticky z-999 top-0 z-50 border-b border-border/50 bg-card/80 backdrop-blur-md">
+        <div className="container mx-auto flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-xl">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-lg">
                 AT
               </div>
-              <span className="font-bold text-xl text-foreground">Store</span>
+              <span className="font-bold text-lg text-foreground">Store</span>
             </Link>
           </div>
 
           <div className="flex items-center gap-3">
             {isLoggedIn ? (
               <>
-                <span className="hidden md:block text-sm text-muted-foreground">
+                <span className="hidden md:block text-xs text-muted-foreground">
                   Xin chào, {displayName}!
                 </span>
 
@@ -175,12 +175,12 @@ export function Header() {
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-4 border-b border-border/50">
+          <div className="flex items-center justify-between p-5 border-b border-border/50">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-sm">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-xs">
                 AT
               </div>
-              <span className="font-bold text-lg text-foreground">
+              <span className="font-bold text-base text-foreground">
                 QTAT SHOP
               </span>
             </div>
@@ -195,7 +195,7 @@ export function Header() {
             </Button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4">
+          <div className="flex-1 overflow-y-auto p-5">
             {isLoggedIn ? (
               <div className="space-y-6">
                 <div className="flex items-center gap-3 p-3 rounded-lg bg-accent/50">
@@ -207,10 +207,10 @@ export function Header() {
                   </Avatar>
 
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">
+                    <p className="text-xs font-medium truncate">
                       {displayName}
                     </p>
-                    <p className="text-xs text-muted-foreground truncate">
+                    <p className="text-[10px] text-muted-foreground truncate">
                       {email}
                     </p>
                   </div>
@@ -263,10 +263,10 @@ export function Header() {
                       AT
                     </div>
                   </div>
-                  <h3 className="text-lg font-semibold mb-2">
+                  <h3 className="text-base font-semibold mb-2">
                     Chào mừng đến QTAT SHOP
                   </h3>
-                  <p className="text-sm text-muted-foreground mb-6">
+                  <p className="text-xs text-muted-foreground mb-6">
                     Đăng nhập để trải nghiệm đầy đủ tính năng
                   </p>
                 </div>
