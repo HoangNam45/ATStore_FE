@@ -17,6 +17,48 @@ export interface CreateAccountData {
   }[];
 }
 
+export interface AccountCredential {
+  id: string;
+  username: string;
+  password: string;
+  price: number;
+  status: "available" | "sold";
+}
+
+export interface AccountCategory {
+  id: string;
+  name: string;
+  price: number;
+  accounts: AccountCredential[];
+}
+
+export interface AccountList {
+  id: string;
+  name: string;
+  game: string;
+  slug: string;
+  server?: string;
+  type: string;
+  displayImage: string;
+  detailImages: string[];
+  categories: AccountCategory[];
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface GameAccountsGroup {
+  game: string;
+  slug: string;
+  lists: AccountList[];
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  timestamp: string;
+  path: string;
+}
+
 export const accountService = {
   async createAccount(data: CreateAccountData) {
     // Get Firebase ID Token
@@ -53,6 +95,133 @@ export const accountService = {
       },
     });
 
+    return response.data;
+  },
+
+  async getAccountsByGame(game: string) {
+    const response = await axiosAuthClient.get(`/account/game/${game}`);
+    return response.data;
+  },
+
+  async getAccountById(accountId: string) {
+    const response = await axiosAuthClient.get(`/account/${accountId}`);
+    return response.data;
+  },
+
+  async getAllAccountsGroupedByGame(): Promise<GameAccountsGroup[]> {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const idToken = await user.getIdToken();
+    console.log("ID Token:", idToken);
+    const response = await axiosAuthClient.get<ApiResponse<AccountList[]>>(
+      "/account/owner/all",
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
+
+    const accountLists = response.data.data;
+
+    // Group by game slug
+    const groupedMap = new Map<string, GameAccountsGroup>();
+
+    accountLists.forEach((list) => {
+      const key = list.slug;
+      if (!groupedMap.has(key)) {
+        groupedMap.set(key, {
+          game: list.game,
+          slug: list.slug,
+          lists: [],
+        });
+      }
+      groupedMap.get(key)!.lists.push(list);
+    });
+
+    return Array.from(groupedMap.values());
+  },
+
+  async updateListType(listId: string, type: string) {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const idToken = await user.getIdToken();
+    const response = await axiosAuthClient.post(
+      "/account/list/update",
+      {
+        listId,
+        type,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
+    return response.data;
+  },
+
+  async updateCategory(
+    listId: string,
+    categoryId: string,
+    name: string,
+    price: number
+  ) {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const idToken = await user.getIdToken();
+    const response = await axiosAuthClient.post(
+      "/account/category/update",
+      {
+        listId,
+        categoryId,
+        name,
+        price,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
+    return response.data;
+  },
+
+  async updateAccount(
+    listId: string,
+    categoryId: string,
+    accountId: string,
+    username: string,
+    password: string,
+    status: "available" | "sold"
+  ) {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const idToken = await user.getIdToken();
+    const response = await axiosAuthClient.post(
+      "/account/account/update",
+      {
+        listId,
+        categoryId,
+        accountId,
+        username,
+        password,
+        status,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
     return response.data;
   },
 };

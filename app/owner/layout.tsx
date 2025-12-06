@@ -40,7 +40,7 @@ export default function OwnerLayout({
         <Menu className="h-6 w-6" />
       </Button>
 
-      <main className="flex-1 p-4 pt-[calc(73px+1rem)] lg:ml-64 lg:p-8 lg:pt-[calc(73px+2rem)]">
+      <main className="flex-1 p-4 pt-18 lg:ml-64 lg:p-8 lg:pt-10">
         {children}
       </main>
     </div>
