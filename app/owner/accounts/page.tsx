@@ -235,23 +235,21 @@ export default function AccountsPage() {
                 open={openGames[game.slug]}
                 onOpenChange={() => toggleGame(game.slug)}
               >
-                <CollapsibleTrigger className="w-full">
-                  <div className="flex items-center justify-between p-4 hover:bg-accent/50 transition-colors">
-                    <div className="flex items-center gap-3">
-                      {openGames[game.slug] ? (
-                        <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                      ) : (
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                      )}
-                      <h3 className="text-lg font-semibold text-foreground">
-                        {game.game}
-                      </h3>
-                      <span className="text-xs text-muted-foreground">
-                        ({game.lists.length} lists)
-                      </span>
-                    </div>
-                  </div>
-                </CollapsibleTrigger>
+                <div className="flex items-center justify-between p-4 hover:bg-accent/50 transition-colors">
+                  <CollapsibleTrigger className="flex items-center gap-3 flex-1 text-left">
+                    {openGames[game.slug] ? (
+                      <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                    ) : (
+                      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                    )}
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {game.game}
+                    </h3>
+                    <span className="text-xs text-muted-foreground">
+                      ({game.lists.length} lists)
+                    </span>
+                  </CollapsibleTrigger>
+                </div>
 
                 <CollapsibleContent>
                   <div className="px-4 pb-4 space-y-3">
@@ -262,37 +260,35 @@ export default function AccountsPage() {
                           open={openLists[list.id]}
                           onOpenChange={() => toggleList(list.id)}
                         >
-                          <CollapsibleTrigger className="w-full">
-                            <div className="flex items-center justify-between p-3 hover:bg-accent/50 transition-colors">
-                              <div className="flex items-center gap-2">
-                                {openLists[list.id] ? (
-                                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                                ) : (
-                                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                                )}
-                                <span className="font-medium text-foreground">
-                                  {list.type}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                  ({list.categories.length} categories)
-                                </span>
-                              </div>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-7 w-7"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setEditingList({
-                                    listId: list.id,
-                                    currentType: list.type,
-                                  });
-                                }}
-                              >
-                                <Edit className="h-3.5 w-3.5" />
-                              </Button>
-                            </div>
-                          </CollapsibleTrigger>
+                          <div className="flex items-center justify-between p-3 hover:bg-accent/50 transition-colors">
+                            <CollapsibleTrigger className="flex items-center gap-2 flex-1 text-left">
+                              {openLists[list.id] ? (
+                                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                              )}
+                              <span className="font-medium text-foreground">
+                                {list.type}
+                              </span>
+                              <span className="text-xs text-muted-foreground">
+                                ({list.categories.length} categories)
+                              </span>
+                            </CollapsibleTrigger>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingList({
+                                  listId: list.id,
+                                  currentType: list.type,
+                                });
+                              }}
+                            >
+                              <Edit className="h-3.5 w-3.5" />
+                            </Button>
+                          </div>
 
                           <CollapsibleContent>
                             <div className="px-3 pb-3 space-y-2">
@@ -305,109 +301,102 @@ export default function AccountsPage() {
                                       toggleCategory(category.id)
                                     }
                                   >
-                                    <CollapsibleTrigger className="w-full">
-                                      <div className="flex items-center justify-between p-2.5 hover:bg-accent/50 transition-colors">
-                                        <div className="flex items-center gap-2">
-                                          {openCategories[category.id] ? (
-                                            <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                                          ) : (
-                                            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                                          )}
-                                          <span className="text-sm font-medium text-foreground">
-                                            {category.name}
-                                          </span>
-                                          <span className="text-xs text-muted-foreground">
-                                            ({category.accounts.length}{" "}
-                                            accounts)
-                                          </span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-6 w-6"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              setAddingAccountTo({
-                                                listId: list.id,
-                                                categoryId: category.id,
-                                              });
-                                            }}
+                                    <div className="flex items-center justify-between p-2.5 hover:bg-accent/50 transition-colors">
+                                      <CollapsibleTrigger className="flex items-center gap-2 flex-1 text-left">
+                                        {openCategories[category.id] ? (
+                                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                                        ) : (
+                                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                                        )}
+                                        <span className="text-sm font-medium text-foreground">
+                                          {category.name}
+                                        </span>
+                                        <span className="text-xs text-muted-foreground">
+                                          ({category.accounts.length} accounts)
+                                        </span>
+                                      </CollapsibleTrigger>
+                                      <div className="flex items-center gap-1">
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setAddingAccountTo({
+                                              listId: list.id,
+                                              categoryId: category.id,
+                                            });
+                                          }}
+                                        >
+                                          <Plus className="h-3 w-3" />
+                                        </Button>
+                                        <DropdownMenu>
+                                          <DropdownMenuTrigger
+                                            asChild
+                                            onClick={(e) => e.stopPropagation()}
                                           >
-                                            <Plus className="h-3 w-3" />
-                                          </Button>
-                                          <DropdownMenu>
-                                            <DropdownMenuTrigger
-                                              asChild
-                                              onClick={(e) =>
-                                                e.stopPropagation()
+                                            <Button
+                                              variant="ghost"
+                                              size="icon"
+                                              className="h-6 w-6"
+                                            >
+                                              <Filter className="h-3 w-3" />
+                                            </Button>
+                                          </DropdownMenuTrigger>
+                                          <DropdownMenuContent
+                                            align="end"
+                                            className="w-40"
+                                          >
+                                            <DropdownMenuLabel>
+                                              Trạng thái
+                                            </DropdownMenuLabel>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuCheckboxItem
+                                              checked={statusFilter === "all"}
+                                              onCheckedChange={() =>
+                                                setStatusFilter("all")
                                               }
                                             >
-                                              <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                className="h-6 w-6"
-                                              >
-                                                <Filter className="h-3 w-3" />
-                                              </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent
-                                              align="end"
-                                              className="w-40"
+                                              Tất cả
+                                            </DropdownMenuCheckboxItem>
+                                            <DropdownMenuCheckboxItem
+                                              checked={
+                                                statusFilter === "available"
+                                              }
+                                              onCheckedChange={() =>
+                                                setStatusFilter("available")
+                                              }
                                             >
-                                              <DropdownMenuLabel>
-                                                Trạng thái
-                                              </DropdownMenuLabel>
-                                              <DropdownMenuSeparator />
-                                              <DropdownMenuCheckboxItem
-                                                checked={statusFilter === "all"}
-                                                onCheckedChange={() =>
-                                                  setStatusFilter("all")
-                                                }
-                                              >
-                                                Tất cả
-                                              </DropdownMenuCheckboxItem>
-                                              <DropdownMenuCheckboxItem
-                                                checked={
-                                                  statusFilter === "available"
-                                                }
-                                                onCheckedChange={() =>
-                                                  setStatusFilter("available")
-                                                }
-                                              >
-                                                Có sẵn
-                                              </DropdownMenuCheckboxItem>
-                                              <DropdownMenuCheckboxItem
-                                                checked={
-                                                  statusFilter === "sold"
-                                                }
-                                                onCheckedChange={() =>
-                                                  setStatusFilter("sold")
-                                                }
-                                              >
-                                                Đã bán
-                                              </DropdownMenuCheckboxItem>
-                                            </DropdownMenuContent>
-                                          </DropdownMenu>
-                                          <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            className="h-6 w-6"
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              setEditingCategory({
-                                                listId: list.id,
-                                                categoryId: category.id,
-                                                currentName: category.name,
-                                                currentPrice: category.price,
-                                              });
-                                            }}
-                                          >
-                                            <Edit className="h-3 w-3" />
-                                          </Button>
-                                        </div>
+                                              Có sẵn
+                                            </DropdownMenuCheckboxItem>
+                                            <DropdownMenuCheckboxItem
+                                              checked={statusFilter === "sold"}
+                                              onCheckedChange={() =>
+                                                setStatusFilter("sold")
+                                              }
+                                            >
+                                              Đã bán
+                                            </DropdownMenuCheckboxItem>
+                                          </DropdownMenuContent>
+                                        </DropdownMenu>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setEditingCategory({
+                                              listId: list.id,
+                                              categoryId: category.id,
+                                              currentName: category.name,
+                                              currentPrice: category.price,
+                                            });
+                                          }}
+                                        >
+                                          <Edit className="h-3 w-3" />
+                                        </Button>
                                       </div>
-                                    </CollapsibleTrigger>
+                                    </div>
 
                                     <CollapsibleContent>
                                       <div className="px-2.5 pb-2.5 space-y-2">

@@ -114,7 +114,7 @@ export const accountService = {
       throw new Error("User not authenticated");
     }
     const idToken = await user.getIdToken();
-    console.log("ID Token:", idToken);
+
     const response = await axiosAuthClient.get<ApiResponse<AccountList[]>>(
       "/account/owner/all",
       {

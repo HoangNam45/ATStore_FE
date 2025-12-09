@@ -14,10 +14,8 @@ import {
   ShoppingCart,
   CreditCard,
 } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 export default function MyOrdersPage() {
-  const router = useRouter();
   const { data: orders = [], error } = useQuery<Order[]>({
     queryKey: ["userOrders"],
     queryFn: orderService.getUserOrders,

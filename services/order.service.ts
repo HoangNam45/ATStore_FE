@@ -51,4 +51,51 @@ export const orderService = {
     );
     return response.data.data;
   },
+
+  /**
+   * Get all orders for admin with pagination and filters
+   */
+  async getAllOrdersAdmin(params: {
+    page: number;
+    limit: number;
+    search?: string;
+    startDate?: string;
+    endDate?: string;
+  }): Promise<{
+    orders: Order[];
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  }> {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
+    const token = await user.getIdToken();
+    const queryParams = new URLSearchParams({
+      page: params.page.toString(),
+      limit: params.limit.toString(),
+    });
+
+    if (params.search) queryParams.append("search", params.search);
+    if (params.startDate) queryParams.append("startDate", params.startDate);
+    if (params.endDate) queryParams.append("endDate", params.endDate);
+
+    const response = await axiosClient.get<
+      ApiResponse<{
+        orders: Order[];
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      }>
+    >(`/order/admin/all-orders?${queryParams.toString()}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data.data;
+  },
 };
