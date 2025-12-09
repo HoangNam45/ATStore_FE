@@ -31,7 +31,7 @@ export default function AccountDetailPage() {
 
   const game = games.find((g) => g.slug === slug);
 
-  const { data: account, isLoading: loading } = useQuery({
+  const { data: account } = useQuery({
     queryKey: ["account", accountId],
     queryFn: async () => {
       const data = await accountService.getAccountById(accountId);
@@ -66,18 +66,6 @@ export default function AccountDetailPage() {
   };
 
   const totalPrice = selectedCategory ? selectedCategory.price * quantity : 0;
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-50 py-12 dark:bg-black">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <p className="text-zinc-600 dark:text-zinc-400">Đang tải...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   if (!account || !game) {
     return (

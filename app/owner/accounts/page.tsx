@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -12,6 +12,7 @@ import {
   EyeOff,
   Filter,
   X,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -37,13 +38,13 @@ import { useQuery } from "@tanstack/react-query";
 import { EditListDialog } from "@/components/owner/EditListDialog";
 import { EditCategoryDialog } from "@/components/owner/EditCategoryDialog";
 import { EditAccountDialog } from "@/components/owner/EditAccountDialog";
+import { AddAccountDialog } from "@/components/owner/AddAccountDialog";
+import { DeleteAccountDialog } from "@/components/owner/DeleteAccountDialog";
 
 export default function AccountsPage() {
-  const {
-    data: gameAccountsGroups = [],
-    isLoading,
-    error,
-  } = useQuery<GameAccountsGroup[]>({
+  const { data: gameAccountsGroups = [], error } = useQuery<
+    GameAccountsGroup[]
+  >({
     queryKey: ["ownerAccounts"],
     queryFn: () => accountService.getAllAccountsGroupedByGame(),
   });
@@ -79,6 +80,15 @@ export default function AccountsPage() {
     currentUsername: string;
     currentPassword: string;
     currentStatus: "available" | "sold";
+  } | null>(null);
+  const [addingAccountTo, setAddingAccountTo] = useState<{
+    listId: string;
+    categoryId: string;
+  } | null>(null);
+  const [deletingAccount, setDeletingAccount] = useState<{
+    listId: string;
+    categoryId: string;
+    accountId: string;
   } | null>(null);
 
   const filteredGames =
@@ -205,11 +215,7 @@ export default function AccountsPage() {
 
       {/* Games List */}
       <div className="space-y-4">
-        {isLoading ? (
-          <Card className="p-8 text-center">
-            <p className="text-muted-foreground">Đang tải...</p>
-          </Card>
-        ) : error ? (
+        {error ? (
           <Card className="p-8 text-center">
             <p className="text-destructive mb-2">
               Có lỗi xảy ra khi tải dữ liệu
@@ -316,6 +322,20 @@ export default function AccountsPage() {
                                           </span>
                                         </div>
                                         <div className="flex items-center gap-1">
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-6 w-6"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setAddingAccountTo({
+                                                listId: list.id,
+                                                categoryId: category.id,
+                                              });
+                                            }}
+                                          >
+                                            <Plus className="h-3 w-3" />
+                                          </Button>
                                           <DropdownMenu>
                                             <DropdownMenuTrigger
                                               asChild
@@ -418,26 +438,42 @@ export default function AccountsPage() {
                                                     ? "Có sẵn"
                                                     : "Đã bán"}
                                                 </span>
-                                                <Button
-                                                  variant="ghost"
-                                                  size="icon"
-                                                  className="h-6 w-6"
-                                                  onClick={() => {
-                                                    setEditingAccount({
-                                                      listId: list.id,
-                                                      categoryId: category.id,
-                                                      accountId: account.id,
-                                                      currentUsername:
-                                                        account.username,
-                                                      currentPassword:
-                                                        account.password,
-                                                      currentStatus:
-                                                        account.status,
-                                                    });
-                                                  }}
-                                                >
-                                                  <Edit className="h-3 w-3" />
-                                                </Button>
+                                                <div className="flex items-center gap-1">
+                                                  <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-6 w-6"
+                                                    onClick={() => {
+                                                      setEditingAccount({
+                                                        listId: list.id,
+                                                        categoryId: category.id,
+                                                        accountId: account.id,
+                                                        currentUsername:
+                                                          account.username,
+                                                        currentPassword:
+                                                          account.password,
+                                                        currentStatus:
+                                                          account.status,
+                                                      });
+                                                    }}
+                                                  >
+                                                    <Edit className="h-3 w-3" />
+                                                  </Button>
+                                                  <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    className="h-6 w-6 text-destructive hover:text-destructive"
+                                                    onClick={() => {
+                                                      setDeletingAccount({
+                                                        listId: list.id,
+                                                        categoryId: category.id,
+                                                        accountId: account.id,
+                                                      });
+                                                    }}
+                                                  >
+                                                    <Trash2 className="h-3 w-3" />
+                                                  </Button>
+                                                </div>
                                               </div>
 
                                               <div className="space-y-1.5 text-xs">
@@ -542,6 +578,25 @@ export default function AccountsPage() {
           currentUsername={editingAccount.currentUsername}
           currentPassword={editingAccount.currentPassword}
           currentStatus={editingAccount.currentStatus}
+        />
+      )}
+
+      {addingAccountTo && (
+        <AddAccountDialog
+          open={true}
+          onOpenChange={(open) => !open && setAddingAccountTo(null)}
+          listId={addingAccountTo.listId}
+          categoryId={addingAccountTo.categoryId}
+        />
+      )}
+
+      {deletingAccount && (
+        <DeleteAccountDialog
+          open={true}
+          onOpenChange={(open) => !open && setDeletingAccount(null)}
+          listId={deletingAccount.listId}
+          categoryId={deletingAccount.categoryId}
+          accountId={deletingAccount.accountId}
         />
       )}
     </div>

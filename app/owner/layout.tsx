@@ -34,7 +34,7 @@ export default function OwnerLayout({
       <Button
         variant="ghost"
         size="icon"
-        className="fixed left-4 top-20 z-30 lg:hidden"
+        className="-mr-10 ml-3 top-20 z-30 lg:hidden"
         onClick={() => setSidebarOpen(true)}
       >
         <Menu className="h-6 w-6" />

@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Users,
-  Settings,
-  LogOut,
-  X,
-} from "lucide-react";
+import { LayoutDashboard, Package, ShoppingCart, X } from "lucide-react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { signOutUser } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -32,16 +24,6 @@ const menuItems = [
     label: "Đơn hàng",
     href: "/owner/orders",
   },
-  {
-    icon: Users,
-    label: "Khách hàng",
-    href: "/owner/customers",
-  },
-  {
-    icon: Settings,
-    label: "Cài đặt",
-    href: "/owner/settings",
-  },
 ];
 
 interface SidebarProps {
@@ -53,13 +35,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { logout } = useAuthStore();
-
-  const handleLogout = async () => {
-    await signOutUser();
-    logout();
-    router.push("/");
-    onClose();
-  };
 
   return (
     <>

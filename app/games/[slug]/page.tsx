@@ -15,11 +15,7 @@ export default function GamePage() {
 
   const game = games.find((g) => g.slug === slug);
 
-  const {
-    data: accounts = [],
-    isLoading: loading,
-    error,
-  } = useQuery<Account[]>({
+  const { data: accounts = [], error } = useQuery<Account[]>({
     queryKey: ["accounts", slug],
     queryFn: async () => {
       const response = await accountService.getAccountsByGame(slug);
@@ -41,18 +37,6 @@ export default function GamePage() {
             <h1 className="text-2xl font-bold text-zinc-800 dark:text-white">
               Game không tồn tại
             </h1>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-zinc-50 py-12 dark:bg-black">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <p className="text-zinc-600 dark:text-zinc-400">Đang tải...</p>
           </div>
         </div>
       </div>

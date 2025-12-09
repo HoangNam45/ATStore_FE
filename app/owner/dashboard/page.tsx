@@ -1,55 +1,28 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { Package, ShoppingCart, DollarSign, TrendingUp } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { accountService } from "@/services/account.service";
+
+interface GameStat {
+  name: string;
+  total: number;
+  sold: number;
+  revenue: number;
+}
+
+interface DashboardStats {
+  totalAccounts: number;
+  soldAccounts: number;
+  revenue: number;
+  gameStats: GameStat[];
+}
 
 export default function OwnerDashboard() {
-  // Mock data - sẽ thay bằng API call thực tế
-  const stats = {
-    totalAccounts: 156,
-    soldAccounts: 89,
-    revenue: 45600000,
-    growth: 12.5,
-  };
-
-  const gameStats = [
-    {
-      name: "Project Sekai",
-      total: 45,
-      sold: 28,
-      revenue: 15400000,
-    },
-    {
-      name: "Bandori",
-      total: 32,
-      sold: 19,
-      revenue: 8900000,
-    },
-    {
-      name: "Uma Musume",
-      total: 28,
-      sold: 15,
-      revenue: 9200000,
-    },
-    {
-      name: "Cookie Run",
-      total: 25,
-      sold: 14,
-      revenue: 6100000,
-    },
-    {
-      name: "D4DJ",
-      total: 15,
-      sold: 8,
-      revenue: 3200000,
-    },
-    {
-      name: "Love and Deepspace",
-      total: 11,
-      sold: 5,
-      revenue: 2800000,
-    },
-  ];
+  const { data: stats, error } = useQuery<DashboardStats>({
+    queryKey: ["dashboardStats"],
+    queryFn: accountService.getDashboardStats,
+  });
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -57,6 +30,25 @@ export default function OwnerDashboard() {
       currency: "VND",
     }).format(amount);
   };
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-[calc(100vh-200px)]">
+        <div className="text-center">
+          <p className="text-red-500 mb-2">
+            Failed to load dashboard statistics
+          </p>
+          <p className="text-sm text-muted-foreground">
+            {error instanceof Error ? error.message : "Unknown error"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!stats) {
+    return null;
+  }
 
   return (
     <div className="space-y-6 md:space-y-8">
@@ -139,33 +131,44 @@ export default function OwnerDashboard() {
               </tr>
             </thead>
             <tbody>
-              {gameStats.map((game, index) => (
-                <tr
-                  key={index}
-                  className="border-b border-border/50 last:border-0"
-                >
-                  <td className="py-2 md:py-4 text-[10px] md:text-sm font-medium text-foreground max-w-20 md:max-w-none truncate">
-                    {game.name}
-                  </td>
-                  <td className="py-2 md:py-4 text-right text-[10px] md:text-sm text-foreground">
-                    {game.total}
-                  </td>
-                  <td className="py-2 md:py-4 text-right text-[10px] md:text-sm text-green-600 hidden sm:table-cell">
-                    {game.sold}
-                  </td>
-                  <td className="py-2 md:py-4 text-right text-[10px] md:text-sm text-muted-foreground hidden md:table-cell">
-                    {game.total - game.sold}
-                  </td>
-                  <td className="py-2 md:py-4 text-right text-[9px] md:text-sm font-medium text-foreground">
-                    <span className="hidden md:inline">
-                      {formatCurrency(game.revenue)}
-                    </span>
-                    <span className="md:hidden">
-                      {(game.revenue / 1000000).toFixed(1)}M
-                    </span>
+              {stats.gameStats && stats.gameStats.length > 0 ? (
+                stats.gameStats.map((game, index) => (
+                  <tr
+                    key={index}
+                    className="border-b border-border/50 last:border-0"
+                  >
+                    <td className="py-2 md:py-4 text-[10px] md:text-sm font-medium text-foreground max-w-20 md:max-w-none truncate">
+                      {game.name}
+                    </td>
+                    <td className="py-2 md:py-4 text-right text-[10px] md:text-sm text-foreground">
+                      {game.total}
+                    </td>
+                    <td className="py-2 md:py-4 text-right text-[10px] md:text-sm text-green-600 hidden sm:table-cell">
+                      {game.sold}
+                    </td>
+                    <td className="py-2 md:py-4 text-right text-[10px] md:text-sm text-muted-foreground hidden md:table-cell">
+                      {game.total - game.sold}
+                    </td>
+                    <td className="py-2 md:py-4 text-right text-[9px] md:text-sm font-medium text-foreground">
+                      <span className="hidden md:inline">
+                        {formatCurrency(game.revenue)}
+                      </span>
+                      <span className="md:hidden">
+                        {(game.revenue / 1000000).toFixed(1)}M
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan={5}
+                    className="py-8 text-center text-sm text-muted-foreground"
+                  >
+                    Chưa có dữ liệu thống kê
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </div>

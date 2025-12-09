@@ -35,7 +35,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky z-999 top-0 z-50 border-b border-border/50 bg-card/80 backdrop-blur-md">
+      <header className="sticky z-99999 top-0 z-50 border-b border-border/50 bg-card/80 backdrop-blur-md">
         <div className="container mx-auto flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
@@ -85,6 +85,20 @@ export function Header() {
                       </div>
 
                       <DropdownMenuSeparator />
+
+                      <DropdownMenuItem asChild>
+                        <Link href="/">
+                          <Home className="mr-2 h-4 w-4" />
+                          <span>Trang chủ</span>
+                        </Link>
+                      </DropdownMenuItem>
+
+                      <DropdownMenuItem asChild>
+                        <Link href="/my-orders">
+                          <ShoppingBag className="mr-2 h-4 w-4" />
+                          <span>Đơn hàng của tôi</span>
+                        </Link>
+                      </DropdownMenuItem>
 
                       {isUserOwner() && (
                         <>
@@ -180,9 +194,7 @@ export function Header() {
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-xs">
                 AT
               </div>
-              <span className="font-bold text-base text-foreground">
-                QTAT SHOP
-              </span>
+              <span className="font-bold text-base text-foreground">Store</span>
             </div>
 
             <Button
@@ -225,15 +237,18 @@ export function Header() {
                     <span className="text-foreground">Trang chủ</span>
                   </Link>
 
-                  <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent w-full text-left">
+                  {/* <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent w-full text-left">
                     <User className="h-5 w-5 text-muted-foreground" />
                     <span>Hồ sơ cá nhân</span>
-                  </button>
+                  </button> */}
 
-                  <button className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent w-full text-left">
+                  <Link
+                    href="/my-orders"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent w-full text-left"
+                  >
                     <ShoppingBag className="h-5 w-5 text-muted-foreground" />
                     <span>Đơn hàng của tôi</span>
-                  </button>
+                  </Link>
 
                   {isUserOwner() && (
                     <Link

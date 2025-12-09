@@ -224,4 +224,80 @@ export const accountService = {
     );
     return response.data;
   },
+
+  async getDashboardStats() {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const idToken = await user.getIdToken();
+    const response = await axiosAuthClient.get<
+      ApiResponse<{
+        totalAccounts: number;
+        soldAccounts: number;
+        revenue: number;
+        gameStats: Array<{
+          name: string;
+          total: number;
+          sold: number;
+          revenue: number;
+        }>;
+      }>
+    >("/account/owner/dashboard/stats", {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+    return response.data.data;
+  },
+
+  async addAccountToCategory(
+    listId: string,
+    categoryId: string,
+    username: string,
+    password: string
+  ) {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const idToken = await user.getIdToken();
+    const response = await axiosAuthClient.post(
+      "/account/account/add",
+      {
+        listId,
+        categoryId,
+        username,
+        password,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
+    return response.data;
+  },
+
+  async deleteAccount(listId: string, categoryId: string, accountId: string) {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const idToken = await user.getIdToken();
+    const response = await axiosAuthClient.post(
+      "/account/account/delete",
+      {
+        listId,
+        categoryId,
+        accountId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
+    return response.data;
+  },
 };
