@@ -42,23 +42,28 @@ export { auth, googleProvider, facebookProvider };
 
 // Helper functions for authentication
 export const signInWithEmail = async (email: string, password: string) => {
+  if (!auth) throw new Error("Firebase not initialized");
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
 export const signInWithGoogle = async () => {
+  if (!auth || !googleProvider) throw new Error("Firebase not initialized");
   return await signInWithPopup(auth, googleProvider);
 };
 
 export const signInWithFacebook = async () => {
+  if (!auth || !facebookProvider) throw new Error("Firebase not initialized");
   return await signInWithPopup(auth, facebookProvider);
 };
 
 export const signOutUser = async () => {
+  if (!auth) throw new Error("Firebase not initialized");
   return await signOut(auth);
 };
 
 // Helper function to get user role from custom claims
 export const getUserRole = async (): Promise<string | null> => {
+  if (!auth) throw new Error("Firebase not initialized");
   const currentUser = auth.currentUser;
   if (!currentUser) return null;
 
@@ -73,6 +78,7 @@ export const getUserRole = async (): Promise<string | null> => {
 export const linkCredentialToCurrentUser = async (
   pendingCredential: AuthCredential
 ) => {
+  if (!auth) throw new Error("Firebase not initialized");
   const currentUser = auth.currentUser;
 
   if (!currentUser) {

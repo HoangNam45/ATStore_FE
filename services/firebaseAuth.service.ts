@@ -15,6 +15,7 @@ import type { SignInRequest, SocialSignInRequest } from "@/types/auth.types";
 export const firebaseAuthService = {
   // email + password sign in, with remember option
   signInWithEmail: async (data: SignInRequest) => {
+    if (!auth) throw new Error("Firebase not initialized");
     const persistence = data.remember
       ? browserLocalPersistence
       : browserSessionPersistence;
@@ -28,6 +29,7 @@ export const firebaseAuthService = {
   },
 
   signInWithGoogle: async (data?: SocialSignInRequest) => {
+    if (!auth || !googleProvider) throw new Error("Firebase not initialized");
     const persistence = data?.remember
       ? browserLocalPersistence
       : browserSessionPersistence;
@@ -37,6 +39,7 @@ export const firebaseAuthService = {
   },
 
   signInWithFacebook: async (data?: SocialSignInRequest) => {
+    if (!auth || !facebookProvider) throw new Error("Firebase not initialized");
     const persistence = data?.remember
       ? browserLocalPersistence
       : browserSessionPersistence;
