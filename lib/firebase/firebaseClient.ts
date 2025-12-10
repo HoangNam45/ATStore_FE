@@ -16,11 +16,20 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize app only once
-if (!getApps().length) {
-  initializeApp(firebaseConfig);
+// Only initialize Firebase in browser environment
+let auth: any;
+let googleProvider: GoogleAuthProvider | undefined;
+let facebookProvider: FacebookAuthProvider | undefined;
+
+if (typeof window !== "undefined") {
+  // Initialize app only once
+  if (!getApps().length) {
+    initializeApp(firebaseConfig);
+  }
+
+  auth = getAuth();
+  googleProvider = new GoogleAuthProvider();
+  facebookProvider = new FacebookAuthProvider();
 }
 
-export const auth = getAuth();
-export const googleProvider = new GoogleAuthProvider();
-export const facebookProvider = new FacebookAuthProvider();
+export { auth, googleProvider, facebookProvider };
