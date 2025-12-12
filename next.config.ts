@@ -9,7 +9,6 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
-    domains: ["hoangnam.site", "at-store-eight.vercel.app"],
   },
 };
 
