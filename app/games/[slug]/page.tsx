@@ -73,6 +73,7 @@ export default function GamePage() {
               fill
               className="object-cover"
               sizes="(max-width: 768px) 64px, 96px"
+              unoptimized
             />
           </div>
           <h1 className="text-2xl font-bold text-zinc-800 dark:text-white md:text-3xl lg:text-3xl">
