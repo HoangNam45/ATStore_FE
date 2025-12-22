@@ -88,9 +88,6 @@ export default function MyOrdersPage() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-pink-100 dark:bg-pink-900/20 rounded-lg">
-                    <CreditCard className="h-6 w-6 text-pink-600 dark:text-pink-400" />
-                  </div>
                   <div>
                     <p className="text-sm text-zinc-600 dark:text-zinc-400">
                       Tổng chi tiêu
@@ -106,14 +103,11 @@ export default function MyOrdersPage() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                    <ShoppingCart className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                  </div>
                   <div>
                     <p className="text-sm text-zinc-600 dark:text-zinc-400">
                       Tổng đơn hàng
                     </p>
-                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    <p className="text-2xl font-bold text-pink-600 dark:text-pink-400">
                       {totalOrders}
                     </p>
                   </div>
@@ -124,14 +118,11 @@ export default function MyOrdersPage() {
             <Card>
               <CardContent className="p-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                    <TrendingUp className="h-6 w-6 text-green-600 dark:text-green-400" />
-                  </div>
                   <div>
                     <p className="text-sm text-zinc-600 dark:text-zinc-400">
                       Tổng tài khoản
                     </p>
-                    <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    <p className="text-2xl font-bold text-pink-600 dark:text-pink-400">
                       {totalItems}
                     </p>
                   </div>
@@ -144,13 +135,12 @@ export default function MyOrdersPage() {
         {paidOrders.length === 0 ? (
           <Card className="mx-auto max-w-2xl">
             <CardContent className="p-12 text-center">
-              <Package className="mx-auto h-16 w-16 text-zinc-400 mb-4" />
               <h2 className="text-xl font-semibold mb-2 text-zinc-800 dark:text-white">
                 Chưa có đơn hàng nào
               </h2>
               <p className="text-zinc-600 dark:text-zinc-400 mb-6">
                 Bạn chưa thực hiện đơn hàng nào. Hãy khám phá các game và mua
-                ngay!
+                ngay
               </p>
             </CardContent>
           </Card>

@@ -95,7 +95,7 @@ export default function OrdersManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-12 dark:bg-black">
+    <div className="min-h-screen bg-zinc-50 py-0 dark:bg-black">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="mb-8">

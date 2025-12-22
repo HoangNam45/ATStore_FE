@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, User, LogOut, X, Home, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 import { signOutUser } from "@/lib/firebase";
+import { usePathname } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -19,8 +20,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const { user, isLoggedIn, getInitials, isUserOwner, logout } = useAuthStore();
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   const handleLogout = async () => {
     await signOutUser();
@@ -184,29 +192,11 @@ export function Header() {
 
       {/* Mobile Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-80 max-w-[85vw] bg-card shadow-xl transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed z-999999 top-15 right-0 z-50 h-full w-80 max-w-[85vw] bg-card shadow-xl transform transition-transform duration-300 ease-in-out md:hidden ${
           isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-5 border-b border-border/50">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-xs">
-                AT
-              </div>
-              <span className="font-bold text-base text-foreground">Store</span>
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-foreground"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-
           <div className="flex-1 overflow-y-auto p-5">
             {isLoggedIn ? (
               <div className="space-y-6">
@@ -281,7 +271,7 @@ export function Header() {
                     </div>
                   </div>
                   <h3 className="text-base font-semibold mb-2">
-                    Chào mừng đến QTAT SHOP
+                    Chào mừng đến AT Store
                   </h3>
                   <p className="text-xs text-muted-foreground mb-6">
                     Đăng nhập để trải nghiệm đầy đủ tính năng

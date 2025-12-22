@@ -63,7 +63,7 @@ export default function GamePage() {
           { label: game.name, active: true },
         ]}
       />
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-6 py-3">
         {/* Game Header with Image */}
         <div className="mb-8 flex items-center gap-4 md:gap-6">
           <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg shadow-md md:h-20 md:w-20">

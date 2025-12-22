@@ -1,8 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function SakuraPetals() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   const [petals] = useState(() =>
     Array.from({ length: 17 }, (_, i) => ({
       id: i,
@@ -13,9 +25,12 @@ export function SakuraPetals() {
     }))
   );
 
+  // Show fewer petals on mobile (6 instead of 17)
+  const visiblePetals = isMobile ? petals.slice(0, 6) : petals;
+
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
-      {petals.map((petal) => (
+      {visiblePetals.map((petal) => (
         <div
           key={petal.id}
           className="absolute will-change-transform"

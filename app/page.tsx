@@ -4,8 +4,8 @@ import { games } from "@/data/games";
 export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
-      <div className="container mx-auto px-15 py-12">
-        <div className="mb-12 text-center">
+      <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-12">
+        <div className="mb-6 text-center sm:mb-12">
           {/* <h1 className="text-3xl font-bold text-zinc-800 dark:text-white">
             AT Store
           </h1> */}
@@ -14,7 +14,7 @@ export default function Home() {
           </p> */}
         </div>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 xl:grid-cols-4">
           {games.map((game) => (
             <GameCard
               key={game.id}

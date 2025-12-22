@@ -457,7 +457,7 @@ export default function NewAccountPage() {
                           onChange={(e) =>
                             updateCategory(category.id, "name", e.target.value)
                           }
-                          placeholder="VD: SSR x3..."
+                          placeholder=""
                           className="text-xs md:text-sm"
                         />
                       </div>
