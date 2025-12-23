@@ -269,10 +269,12 @@ export default function AccountDetailPage() {
                   )}`
                 );
               }}
-              disabled={!selectedCategory}
+              disabled={!selectedCategory || selectedCategory.accountCount <= 0}
               className="w-full rounded-lg bg-[oklch(0.75_0.15_350)] py-4 font-semibold text-white transition-all hover:bg-[oklch(0.7_0.15_350)] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Mua ngay
+              {selectedCategory && selectedCategory.accountCount <= 0
+                ? "Hết hàng"
+                : "Mua ngay"}
             </button>
           </div>
         </div>

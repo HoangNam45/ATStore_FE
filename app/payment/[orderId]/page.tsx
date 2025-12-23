@@ -19,9 +19,9 @@ export default function PaymentPage() {
 
   // TODO: Replace with actual bank info from backend/config
   const bankInfo: BankInfo = {
-    bankName: "BIDV",
-    accountNo: "96247VVHYNOL806",
-    accountName: "NGUYEN HUU HOANG NAM",
+    bankName: "VietinBank",
+    accountNo: "106880289426",
+    accountName: "QUANG THI ANH TUYET",
   };
 
   const { data: order } = useQuery<Order>({
@@ -188,13 +188,13 @@ export default function PaymentPage() {
 
                 <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
                   <h3 className="mb-2 font-semibold text-yellow-800">
-                    ⚠️ Lưu ý quan trọng
+                    Lưu ý quan trọng
                   </h3>
                   <ul className="space-y-1 text-sm text-yellow-700">
                     <li>
                       • Chuyển đúng số tiền: {formatPrice(order.totalPrice)}
                     </li>
-                    <li>• Nội dung: {order.checkoutCode}</li>
+                    <li>• Nội dung:SEVQR TKPAT1 {order.checkoutCode}</li>
                     <li>• Không thay đổi nội dung chuyển khoản</li>
                   </ul>
                 </div>
@@ -233,7 +233,7 @@ export default function PaymentPage() {
                   <div>
                     <Label className="text-sm font-medium">Nội dung</Label>
                     <p className="font-mono font-semibold text-red-600">
-                      {order.checkoutCode}
+                      SEVQR TKPAT1 {order.checkoutCode}
                     </p>
                   </div>
                 </div>
