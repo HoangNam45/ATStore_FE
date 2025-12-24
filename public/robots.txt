@@ -1,0 +1,28 @@
+# Cho phép tất cả các bot
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /*.json$
+Disallow: /*?*
+Disallow: /*/login
+Disallow: /*/register
+Disallow: /*/verify-email
+Disallow: /checkout
+Disallow: /my-orders
+Disallow: /owner/
+
+# Bot của Google
+User-agent: Googlebot
+Allow: /
+
+# Bot của Bing
+User-agent: Bingbot
+Allow: /
+
+# Crawl-delay
+User-agent: *
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://at-store-eight.vercel.app/sitemap.xml

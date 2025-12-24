@@ -1,4 +1,14 @@
+import type { Metadata } from "next";
 import { SakuraPetals } from "@/components/Theme/sakura-petals";
+
+export const metadata: Metadata = {
+  title: "Đăng Nhập",
+  description: "Đăng nhập vào tài khoản ATStore để mua bán tài khoản game.",
+  robots: {
+    index: false,
+    follow: true,
+  },
+};
 
 export default function AuthLayout({
   children,

@@ -1,0 +1,76 @@
+import type { Metadata } from "next";
+import { games } from "@/data/games";
+
+const baseUrl = "https://atstore.com";
+
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const game = games.find((g) => g.slug === slug);
+
+  if (!game) {
+    return {
+      title: "Không Tìm Thấy Game",
+      description: "Trang game bạn đang tìm không tồn tại.",
+    };
+  }
+
+  const gameUrl = `${baseUrl}/games/${slug}`;
+  const description = `Mua bán tài khoản ${game.name} uy tín, giá rẻ tại ATStore.`;
+
+  return {
+    title: `Mua Bán Tài Khoản ${game.name}`,
+    description,
+    keywords: [
+      `tài khoản ${game.name}`,
+      `mua acc ${game.name}`,
+      `bán acc ${game.name}`,
+      `${game.name} giá rẻ`,
+      "tài khoản game",
+    ],
+    openGraph: {
+      title: `Tài Khoản ${game.name} - ATStore`,
+      description,
+      url: gameUrl,
+      type: "website",
+      images: [
+        {
+          url: game.image.startsWith("http")
+            ? game.image
+            : `${baseUrl}${game.image}`,
+          width: 1200,
+          height: 630,
+          alt: `Tài Khoản ${game.name}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Tài Khoản ${game.name} - ATStore`,
+      description,
+      images: [
+        game.image.startsWith("http") ? game.image : `${baseUrl}${game.image}`,
+      ],
+    },
+    alternates: {
+      canonical: gameUrl,
+    },
+  };
+}
+
+export function generateStaticParams() {
+  return games.map((game) => ({
+    slug: game.slug,
+  }));
+}
+
+export default function GameLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
+}
