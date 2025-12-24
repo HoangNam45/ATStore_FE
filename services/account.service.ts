@@ -1,5 +1,5 @@
 import { axiosAuthClient } from "@/lib/axios/axiosAuthClient";
-import { auth } from "@/lib/firebase/firebaseClient";
+import { getCurrentUserToken } from "@/lib/firebase";
 
 export interface CreateAccountData {
   game: string;
@@ -62,11 +62,7 @@ export interface ApiResponse<T> {
 export const accountService = {
   async createAccount(data: CreateAccountData) {
     // Get Firebase ID Token
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-    const idToken = await user.getIdToken();
+    const idToken = await getCurrentUserToken();
 
     const formData = new FormData();
 
@@ -110,11 +106,7 @@ export const accountService = {
   },
 
   async getAllAccountsGroupedByGame(): Promise<GameAccountsGroup[]> {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-    const idToken = await user.getIdToken();
+    const idToken = await getCurrentUserToken();
 
     const response = await axiosAuthClient.get<ApiResponse<AccountList[]>>(
       "/account/owner/all",
@@ -146,11 +138,7 @@ export const accountService = {
   },
 
   async updateListType(listId: string, type: string) {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-    const idToken = await user.getIdToken();
+    const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.post(
       "/account/list/update",
       {
@@ -172,11 +160,7 @@ export const accountService = {
     name: string,
     price: number
   ) {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-    const idToken = await user.getIdToken();
+    const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.post(
       "/account/category/update",
       {
@@ -202,11 +186,7 @@ export const accountService = {
     password: string,
     status: "available" | "sold"
   ) {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-    const idToken = await user.getIdToken();
+    const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.post(
       "/account/account/update",
       {
@@ -227,11 +207,7 @@ export const accountService = {
   },
 
   async getDashboardStats() {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-    const idToken = await user.getIdToken();
+    const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.get<
       ApiResponse<{
         totalAccounts: number;
@@ -258,11 +234,7 @@ export const accountService = {
     username: string,
     password: string
   ) {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-    const idToken = await user.getIdToken();
+    const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.post(
       "/account/account/add",
       {
@@ -281,11 +253,7 @@ export const accountService = {
   },
 
   async deleteAccount(listId: string, categoryId: string, accountId: string) {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-    const idToken = await user.getIdToken();
+    const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.post(
       "/account/account/delete",
       {

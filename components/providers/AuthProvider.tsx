@@ -9,6 +9,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { user, logout } = useAuthStore();
 
   useEffect(() => {
+    // Check if auth is initialized
+    if (!auth) {
+      console.warn("Firebase auth not initialized");
+      return;
+    }
+
     // Listen to Firebase auth state changes
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (!firebaseUser) {

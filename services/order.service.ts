@@ -1,6 +1,6 @@
 import { axiosClient } from "@/lib/axios/axiosClient";
 import { CreateOrderRequest, Order } from "@/types/order.types";
-import { auth } from "@/lib/firebase/firebaseClient";
+import { getCurrentUserToken } from "@/lib/firebase";
 
 interface ApiResponse<T> {
   success: boolean;
@@ -35,12 +35,7 @@ export const orderService = {
    * Get all orders for the current user
    */
   async getUserOrders(): Promise<Order[]> {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-
-    const token = await user.getIdToken();
+    const token = await getCurrentUserToken();
     const response = await axiosClient.get<ApiResponse<Order[]>>(
       "/order/user/my-orders",
       {
@@ -68,12 +63,7 @@ export const orderService = {
     limit: number;
     totalPages: number;
   }> {
-    const user = auth.currentUser;
-    if (!user) {
-      throw new Error("User not authenticated");
-    }
-
-    const token = await user.getIdToken();
+    const token = await getCurrentUserToken();
     const queryParams = new URLSearchParams({
       page: params.page.toString(),
       limit: params.limit.toString(),

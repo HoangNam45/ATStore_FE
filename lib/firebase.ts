@@ -61,6 +61,16 @@ export const signOutUser = async () => {
   return await signOut(auth);
 };
 
+// Helper function to get current user and ID token
+export const getCurrentUserToken = async (): Promise<string> => {
+  if (!auth) throw new Error("Firebase not initialized");
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    throw new Error("User not authenticated");
+  }
+  return await currentUser.getIdToken();
+};
+
 // Helper function to get user role from custom claims
 export const getUserRole = async (): Promise<string | null> => {
   if (!auth) throw new Error("Firebase not initialized");

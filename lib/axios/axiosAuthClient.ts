@@ -20,7 +20,9 @@ axiosAuthClient.interceptors.response.use(
 
       // Sign out from Firebase
       try {
-        await auth.signOut();
+        if (auth) {
+          await auth.signOut();
+        }
       } catch (signOutError) {
         console.error("Error signing out:", signOutError);
       }
