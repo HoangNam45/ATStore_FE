@@ -13,12 +13,18 @@ export function Footer() {
               <span className="font-bold text-xl text-foreground">Store</span>
             </div>
 
-            <div className="flex">
+            <div className="flex gap-6">
               <a
                 href="https://www.facebook.com/racruoino1"
                 className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
               >
                 <Facebook className="h-4 w-4" />
+              </a>
+              <a
+                href="https://x.com/Flykra3"
+                className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
+                <Twitter className="h-4 w-4" />
               </a>
             </div>
           </div>

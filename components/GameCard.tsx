@@ -24,9 +24,19 @@ export default function GameCard({ name, image, slug }: GameCardProps) {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         </div>
-        <div className="p-3">
-          <h3 className="text-center text-xs font-semibold text-zinc-800 transition-colors group-hover:text-[oklch(0.75_0.15_350)] dark:text-zinc-200 dark:group-hover:text-[oklch(0.75_0.15_350)]">
-            {name}
+        <div className="p-2">
+          <h3 className="text-center text-xs font-semibold text-zinc-800 transition-colors group-hover:text-[oklch(0.75_0.15_350)] dark:text-zinc-200 dark:group-hover:text-[oklch(0.75_0.15_350)] min-h-8">
+            <span
+              className="block"
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+              }}
+            >
+              {name}
+            </span>
           </h3>
         </div>
       </div>

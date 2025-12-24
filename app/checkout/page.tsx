@@ -69,7 +69,7 @@ export default function CheckoutPage() {
       return;
     }
 
-    createOrderMutation.mutate({
+    const payload: any = {
       accountId: checkoutData.accountId,
       accountType: checkoutData.accountType,
       categoryName: checkoutData.categoryName,
@@ -78,10 +78,18 @@ export default function CheckoutPage() {
       totalPrice: checkoutData.totalPrice,
       email,
       game: checkoutData.game,
-      server: checkoutData.server || "",
       displayImage: checkoutData.displayImage,
-      userId: userId || undefined,
-    });
+    };
+
+    if (checkoutData.server) {
+      payload.server = checkoutData.server;
+    }
+
+    if (userId) {
+      payload.userId = userId;
+    }
+
+    createOrderMutation.mutate(payload);
   };
 
   if (!checkoutData) {

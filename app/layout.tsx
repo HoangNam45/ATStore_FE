@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/QueryProvider";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Header } from "@/components/Layout/Header/Header";
 import { SakuraPetals } from "@/components/Theme/sakura-petals";
 import { Footer } from "@/components/Layout/Footer/Footer";
@@ -32,10 +33,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          <SakuraPetals />
-          <Header />
-          {children}
-          <Footer />
+          <AuthProvider>
+            <SakuraPetals />
+            <Header />
+            {children}
+            <Footer />
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>

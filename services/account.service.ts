@@ -90,7 +90,8 @@ export const accountService = {
 
     const response = await axiosAuthClient.post("/account/create", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        // Don't set Content-Type for multipart/form-data
+        // Let browser set it with the correct boundary
         Authorization: `Bearer ${idToken}`,
       },
     });

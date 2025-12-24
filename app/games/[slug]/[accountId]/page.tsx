@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
@@ -29,28 +29,36 @@ export default function AccountDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
+  // Reset state when accountId changes
+  useEffect(() => {
+    setSelectedCategory(null);
+    setQuantity(1);
+    setSelectedImageIndex(0);
+  }, [accountId]);
+
   const game = games.find((g) => g.slug === slug);
 
-  const { data: account } = useQuery({
+  const { data: account, isLoading } = useQuery({
     queryKey: ["account", accountId],
     queryFn: async () => {
       const data = await accountService.getAccountById(accountId);
       // Handle both direct data and wrapped response
       const accountData = data.data || data;
-
-      // Set initial category when data loads
-      if (
-        accountData.categories &&
-        accountData.categories.length > 0 &&
-        !selectedCategory
-      ) {
-        setSelectedCategory(accountData.categories[0]);
-      }
-
       return accountData as Account;
     },
     enabled: !!accountId,
   });
+
+  // Set initial category when account data loads
+  useEffect(() => {
+    if (
+      account?.categories &&
+      account.categories.length > 0 &&
+      !selectedCategory
+    ) {
+      setSelectedCategory(account.categories[0]);
+    }
+  }, [account]);
 
   const handleQuantityChange = (delta: number) => {
     if (!selectedCategory) return;
@@ -67,6 +75,45 @@ export default function AccountDetailPage() {
 
   const totalPrice = selectedCategory ? selectedCategory.price * quantity : 0;
 
+  // Show loading skeleton while fetching data
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-zinc-50 py-12 dark:bg-black">
+        <div className="container mx-auto px-4">
+          <div className="grid gap-8 lg:grid-cols-2">
+            {/* Left Column - Image Skeleton */}
+            <div className="space-y-4">
+              <div className="relative aspect-video w-full rounded-lg bg-zinc-200 dark:bg-zinc-800" />
+              <div className="grid grid-cols-4 gap-2">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="aspect-video rounded-md bg-zinc-200 dark:bg-zinc-800"
+                  />
+                ))}
+              </div>
+            </div>
+            {/* Right Column - Details Skeleton */}
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <div className="h-8 w-3/4 rounded bg-zinc-200 dark:bg-zinc-800" />
+                <div className="h-4 w-1/2 rounded bg-zinc-200 dark:bg-zinc-800" />
+              </div>
+              <div className="space-y-3">
+                <div className="h-4 w-1/4 rounded bg-zinc-200 dark:bg-zinc-800" />
+                <div className="h-10 rounded bg-zinc-200 dark:bg-zinc-800" />
+              </div>
+              <div className="h-12 rounded bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-16 rounded bg-zinc-100 dark:bg-zinc-800" />
+              <div className="h-12 rounded bg-zinc-200 dark:bg-zinc-800" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if data failed to load
   if (!account || !game) {
     return (
       <div className="min-h-screen bg-zinc-50 py-12 dark:bg-black">
@@ -177,7 +224,7 @@ export default function AccountDetailPage() {
                 }}
               >
                 <SelectTrigger className="w-full border-2 border-zinc-300 bg-white px-4 py-3 text-zinc-800 transition-colors hover:border-[oklch(0.75_0.15_350)] focus:border-[oklch(0.75_0.15_350)] dark:border-zinc-700 dark:bg-zinc-900 dark:text-white">
-                  <SelectValue placeholder="Chọn loại sản phẩm">
+                  <SelectValue>
                     {selectedCategory && (
                       <span>
                         {selectedCategory.name} -{" "}
