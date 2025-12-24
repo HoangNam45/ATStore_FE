@@ -5,11 +5,21 @@ import { useAuthStore } from "@/store/useAuthStore";
 export const axiosAuthClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-  },
   withCredentials: true,
 });
+
+// Request interceptor to handle FormData
+axiosAuthClient.interceptors.request.use(
+  (config) => {
+    if (config.data instanceof FormData) {
+      delete config.headers["Content-Type"];
+    } else {
+      config.headers["Content-Type"] = "application/json";
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Response interceptor to handle 401 errors (token expired)
 axiosAuthClient.interceptors.response.use(
