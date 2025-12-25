@@ -24,7 +24,7 @@ export default function PaymentPage() {
     accountName: "QUANG THI ANH TUYET",
   };
 
-  const { data: order } = useQuery<Order>({
+  const { data: order, isLoading } = useQuery<Order>({
     queryKey: ["order", orderId],
     queryFn: () => orderService.getOrder(orderId),
     refetchInterval: (query) => {
@@ -87,6 +87,18 @@ export default function PaymentPage() {
   const formatPrice = (price: number): string => {
     return price.toLocaleString("vi-VN") + "đ";
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-zinc-50 py-12 dark:bg-black">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-zinc-600 dark:text-zinc-400">Đang tải...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!order) {
     return (

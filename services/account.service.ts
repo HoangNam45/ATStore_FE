@@ -269,4 +269,28 @@ export const accountService = {
     );
     return response.data;
   },
+
+  async deleteList(listId: string) {
+    const idToken = await getCurrentUserToken();
+    const response = await axiosAuthClient.delete(`/account/list/${listId}`, {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    });
+    return response.data;
+  },
+
+  async updateListImages(listId: string, formData: FormData) {
+    const idToken = await getCurrentUserToken();
+    const response = await axiosAuthClient.post(
+      `/account/list/${listId}/images`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
+    return response.data;
+  },
 };

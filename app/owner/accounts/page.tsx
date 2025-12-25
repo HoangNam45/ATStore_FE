@@ -13,6 +13,7 @@ import {
   Filter,
   X,
   Trash2,
+  Images,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -40,6 +41,8 @@ import { EditCategoryDialog } from "@/components/owner/EditCategoryDialog";
 import { EditAccountDialog } from "@/components/owner/EditAccountDialog";
 import { AddAccountDialog } from "@/components/owner/AddAccountDialog";
 import { DeleteAccountDialog } from "@/components/owner/DeleteAccountDialog";
+import { DeleteListDialog } from "@/components/owner/DeleteListDialog";
+import { ManageImagesDialog } from "@/components/owner/ManageImagesDialog";
 
 export default function AccountsPage() {
   const { data: gameAccountsGroups = [], error } = useQuery<
@@ -89,6 +92,17 @@ export default function AccountsPage() {
     listId: string;
     categoryId: string;
     accountId: string;
+  } | null>(null);
+  const [deletingList, setDeletingList] = useState<{
+    listId: string;
+    listType: string;
+    totalAccounts: number;
+  } | null>(null);
+  const [managingImages, setManagingImages] = useState<{
+    listId: string;
+    listType: string;
+    displayImage: string;
+    detailImages: string[];
   } | null>(null);
 
   const filteredGames =
@@ -274,20 +288,57 @@ export default function AccountsPage() {
                                 ({list.categories.length} categories)
                               </span>
                             </CollapsibleTrigger>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingList({
-                                  listId: list.id,
-                                  currentType: list.type,
-                                });
-                              }}
-                            >
-                              <Edit className="h-3.5 w-3.5" />
-                            </Button>
+                            <div className="flex items-center gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setManagingImages({
+                                    listId: list.id,
+                                    listType: list.type,
+                                    displayImage: list.displayImage,
+                                    detailImages: list.detailImages || [],
+                                  });
+                                }}
+                              >
+                                <Images className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditingList({
+                                    listId: list.id,
+                                    currentType: list.type,
+                                  });
+                                }}
+                              >
+                                <Edit className="h-3.5 w-3.5" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7 text-destructive hover:text-destructive"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  const totalAccounts = list.categories.reduce(
+                                    (sum, cat) => sum + cat.accounts.length,
+                                    0
+                                  );
+                                  setDeletingList({
+                                    listId: list.id,
+                                    listType: list.type,
+                                    totalAccounts,
+                                  });
+                                }}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                              </Button>
+                            </div>
                           </div>
 
                           <CollapsibleContent>
@@ -586,6 +637,27 @@ export default function AccountsPage() {
           listId={deletingAccount.listId}
           categoryId={deletingAccount.categoryId}
           accountId={deletingAccount.accountId}
+        />
+      )}
+
+      {deletingList && (
+        <DeleteListDialog
+          open={true}
+          onOpenChange={(open) => !open && setDeletingList(null)}
+          listId={deletingList.listId}
+          listType={deletingList.listType}
+          totalAccounts={deletingList.totalAccounts}
+        />
+      )}
+
+      {managingImages && (
+        <ManageImagesDialog
+          open={true}
+          onOpenChange={(open) => !open && setManagingImages(null)}
+          listId={managingImages.listId}
+          listType={managingImages.listType}
+          currentDisplayImage={managingImages.displayImage}
+          currentDetailImages={managingImages.detailImages}
         />
       )}
     </div>

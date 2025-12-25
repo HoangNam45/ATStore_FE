@@ -15,7 +15,11 @@ export default function GamePage() {
 
   const game = games.find((g) => g.slug === slug);
 
-  const { data: accounts = [], error } = useQuery<Account[]>({
+  const {
+    data: accounts = [],
+    error,
+    isLoading,
+  } = useQuery<Account[]>({
     queryKey: ["accounts", slug],
     queryFn: async () => {
       const response = await accountService.getAccountsByGame(slug);
@@ -81,7 +85,11 @@ export default function GamePage() {
           </h1>
         </div>
 
-        {accounts.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center">
+            <p className="text-zinc-600 dark:text-zinc-400">Đang tải...</p>
+          </div>
+        ) : accounts.length === 0 ? (
           <div className="text-center">
             <p className="text-zinc-600 dark:text-zinc-400">
               Chưa có account nào cho game này
