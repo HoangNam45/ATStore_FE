@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { games } from "@/data/games";
 
-const baseUrl = "https://atstore.com";
+const baseUrl = "https://qtat.website";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -14,15 +14,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!game) {
     return {
       title: "Không Tìm Thấy Game",
-      description: "Trang game bạn đang tìm không tồn tại.",
+      description: "Trang bạn đang tìm không tồn tại.",
     };
   }
 
   const gameUrl = `${baseUrl}/games/${slug}`;
-  const description = `Mua bán tài khoản ${game.name} uy tín, giá rẻ tại ATStore.`;
+  const description = `Mua bán tài khoản reroll ${game.name}.`;
 
   return {
-    title: `Mua Bán Tài Khoản ${game.name}`,
+    title: `Mua Bán Tài Khoản Reroll ${game.name}`,
     description,
     keywords: [
       `tài khoản ${game.name}`,

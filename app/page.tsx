@@ -2,24 +2,24 @@ import GameCard from "@/components/GameCard";
 import { games } from "@/data/games";
 import type { Metadata } from "next";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://atstore.com";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://qtat.website";
 
 export const metadata: Metadata = {
-  title: "Trang Chủ - Mua Bán Tài Khoản Game",
+  title: "QTAT - Mua Bán Tài Khoản Reroll",
   description:
-    "Khám phá hàng nghìn tài khoản game chất lượng từ các tựa game hot như Project Sekai, BanG Dream, Uma Musume và nhiều game khác. Giá tốt, giao dịch an toàn.",
+    "Tui bán nhiều account reroll như Project Sekai, BanG Dream, Uma Musume và nhiều game khác.",
   openGraph: {
-    title: "ATStore - Mua Bán Tài Khoản Game Uy Tín",
+    title: "QTAT - Mua Bán Tài Khoản Reroll",
     description:
-      "Khám phá hàng nghìn tài khoản game chất lượng với giá tốt nhất thị trường.",
+      "Tui bán nhiều account reroll như Project Sekai, BanG Dream, Uma Musume và nhiều game khác.",
     url: baseUrl,
     type: "website",
     images: [
       {
-        url: `${baseUrl}/og-image.png`,
+        url: `${baseUrl}/images/games/pjsk.jfif`,
         width: 1200,
         height: 630,
-        alt: "ATStore - Tài Khoản Game",
+        alt: "QTAT - Tài Khoản Reroll",
       },
     ],
   },
@@ -34,22 +34,15 @@ export default function Home() {
     "@type": "WebSite",
     name: "ATStore",
     url: baseUrl,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${baseUrl}/search?q={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
-    description: "Sàn giao dịch mua bán tài khoản game uy tín và an toàn",
-    image: `${baseUrl}/og-image.png`,
+    description:
+      "Sàn giao dịch mua bán tài khoản game reroll uy tín và an toàn",
+    image: `${baseUrl}/images/games/pjsk.jfif`,
     publisher: {
       "@type": "Organization",
       name: "ATStore",
       logo: {
         "@type": "ImageObject",
-        url: `${baseUrl}/logo.png`,
+        url: `${baseUrl}/images/games/pjsk.jfif`,
       },
     },
   };
@@ -63,12 +56,11 @@ export default function Home() {
       <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
         <div className="container mx-auto px-6 py-6 sm:px-12 sm:py-12">
           <div className="mb-6 text-center sm:mb-12">
-            <h1 className="text-3xl font-bold mb-3 sm:text-4xl">
-              Mua Bán Tài Khoản Game Uy Tín
+            <h1 className="text-sm text-gray-600 dark:text-gray-400 sm:text-base">
+              <div>Chào mọi người đến với web của tui {"(>_<)"}</div>
+              Web tui chủ yếu bán acc reroll như Project Sekai, BanG Dream, Uma
+              Musume và nhiều game khác.
             </h1>
-            <p className="text-base text-gray-600 dark:text-gray-400 sm:text-lg">
-              Giao dịch an toàn - Giá tốt nhất - Hỗ trợ 24/7
-            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3 xl:grid-cols-4">

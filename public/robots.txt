@@ -25,4 +25,4 @@ User-agent: *
 Crawl-delay: 1
 
 # Sitemap
-Sitemap: https://at-store-eight.vercel.app/sitemap.xml
+Sitemap: https://qtat.website/sitemap.xml
