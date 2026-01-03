@@ -40,6 +40,7 @@ import { EditListDialog } from "@/components/owner/EditListDialog";
 import { EditCategoryDialog } from "@/components/owner/EditCategoryDialog";
 import { EditAccountDialog } from "@/components/owner/EditAccountDialog";
 import { AddAccountDialog } from "@/components/owner/AddAccountDialog";
+import { AddCategoryDialog } from "@/components/owner/AddCategoryDialog";
 import { DeleteAccountDialog } from "@/components/owner/DeleteAccountDialog";
 import { DeleteListDialog } from "@/components/owner/DeleteListDialog";
 import { ManageImagesDialog } from "@/components/owner/ManageImagesDialog";
@@ -87,6 +88,9 @@ export default function AccountsPage() {
   const [addingAccountTo, setAddingAccountTo] = useState<{
     listId: string;
     categoryId: string;
+  } | null>(null);
+  const [addingCategoryTo, setAddingCategoryTo] = useState<{
+    listId: string;
   } | null>(null);
   const [deletingAccount, setDeletingAccount] = useState<{
     listId: string;
@@ -289,6 +293,19 @@ export default function AccountsPage() {
                               </span>
                             </CollapsibleTrigger>
                             <div className="flex items-center gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-7 w-7"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setAddingCategoryTo({
+                                    listId: list.id,
+                                  });
+                                }}
+                              >
+                                <Plus className="h-3.5 w-3.5" />
+                              </Button>
                               <Button
                                 variant="ghost"
                                 size="icon"
@@ -627,6 +644,14 @@ export default function AccountsPage() {
           onOpenChange={(open) => !open && setAddingAccountTo(null)}
           listId={addingAccountTo.listId}
           categoryId={addingAccountTo.categoryId}
+        />
+      )}
+
+      {addingCategoryTo && (
+        <AddCategoryDialog
+          open={true}
+          onOpenChange={(open) => !open && setAddingCategoryTo(null)}
+          listId={addingCategoryTo.listId}
         />
       )}
 

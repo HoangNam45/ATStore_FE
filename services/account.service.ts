@@ -293,4 +293,22 @@ export const accountService = {
     );
     return response.data;
   },
+
+  async addCategoryToList(listId: string, name: string, price: number) {
+    const idToken = await getCurrentUserToken();
+    const response = await axiosAuthClient.post(
+      "/account/category/add",
+      {
+        listId,
+        name,
+        price,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      }
+    );
+    return response.data;
+  },
 };
