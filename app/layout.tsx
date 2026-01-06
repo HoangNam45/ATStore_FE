@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://atstore.com";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://qtat.website";
 
 export const metadata: Metadata = {
   title: {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s | ATStore",
   },
   description:
-    "ATStore là sàn giao dịch mua bán tài khoản game uy tín và an toàn. Giao dịch nhanh chóng, bảo mật tuyệt đối, hỗ trợ 24/7.",
+    "Web chủ yếu bán acc reroll như Project Sekai, BanG Dream, Uma Musume và nhiều game khác.",
   keywords: [
     "mua tài khoản reroll",
     "bán tài khoản reroll",
@@ -46,7 +46,8 @@ export const metadata: Metadata = {
     url: baseUrl,
     siteName: "ATStore",
     title: "ATStore - Mua Bán Account Reroll",
-    description: "Mua bán acc reroll uy tín, an toàn.",
+    description:
+      "Web chủ yếu bán acc reroll như Project Sekai, BanG Dream, Uma Musume và nhiều game khác.",
     images: [
       {
         url: `${baseUrl}/og-image.png`,
