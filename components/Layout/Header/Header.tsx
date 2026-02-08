@@ -6,12 +6,9 @@ import {
   Menu,
   User,
   LogOut,
-  X,
   Home,
   ShoppingBag,
   BookOpen,
-  Facebook,
-  MessageCircle,
   ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
@@ -90,7 +87,7 @@ export function Header() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="h-auto px-0 text-base cursor-pointer font-normal text-foreground hover:text-primary  hover:bg-transparent flex items-center gap-1"
+                    className="h-auto px-0 text-base cursor-pointer font-normal text-foreground hover:text-primary  hover:bg-transparent flex items-center gap-1 cursor-pointer"
                   >
                     Liên hệ
                     <ChevronDown
@@ -220,7 +217,7 @@ export function Header() {
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
-                        className="relative cursor-pointer h-10 w-10 rounded-full"
+                        className="relative h-10 w-10 rounded-full cursor-pointer"
                       >
                         <Avatar className="h-9 w-9">
                           <AvatarImage src={avatarUrl} alt="User avatar" />
@@ -250,7 +247,7 @@ export function Header() {
                       <DropdownMenuItem asChild>
                         <Link
                           href="/"
-                          className={isHomePage ? "text-primary" : ""}
+                          className={`${isHomePage ? "text-primary" : ""} cursor-pointer`}
                         >
                           <Home
                             className={`mr-2 h-4 w-4 ${
@@ -266,7 +263,7 @@ export function Header() {
                       <DropdownMenuItem asChild>
                         <Link
                           href="/my-orders"
-                          className={isOrdersPage ? "text-primary" : ""}
+                          className={`${isOrdersPage ? "text-primary" : ""} cursor-pointer`}
                         >
                           <ShoppingBag
                             className={`mr-2 h-4 w-4 ${
@@ -282,7 +279,7 @@ export function Header() {
                       <DropdownMenuItem asChild>
                         <Link
                           href="/guide"
-                          className={isGuidePage ? "text-primary" : ""}
+                          className={`${isGuidePage ? "text-primary" : ""} cursor-pointer`}
                         >
                           <BookOpen
                             className={`mr-2 h-4 w-4 ${
@@ -301,7 +298,7 @@ export function Header() {
                           <DropdownMenuItem asChild>
                             <Link
                               href="/owner/dashboard"
-                              className={isOwnerPage ? "text-primary" : ""}
+                              className={`${isOwnerPage ? "text-primary" : ""} cursor-pointer`}
                             >
                               <span>Quản lý tài khoản</span>
                             </Link>
@@ -333,7 +330,7 @@ export function Header() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="text-foreground h-8 w-8"
+                    className="text-foreground h-8 w-8 cursor-pointer"
                     onClick={() => setIsMobileMenuOpen(true)}
                   >
                     <Menu className="h-5 w-5" />
@@ -361,7 +358,7 @@ export function Header() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-foreground md:hidden"
+                  className="text-foreground md:hidden cursor-pointer"
                   onClick={() => setIsMobileMenuOpen(true)}
                 >
                   <Menu className="h-5 w-5" />
@@ -413,7 +410,7 @@ export function Header() {
                     href="/"
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors ${
                       isHomePage ? "text-primary" : "text-foreground"
-                    }`}
+                    } cursor-pointer`}
                   >
                     <Home
                       className={`h-5 w-5 ${
@@ -427,7 +424,7 @@ export function Header() {
                     href="/guide"
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors ${
                       isGuidePage ? "text-primary" : "text-foreground"
-                    }`}
+                    } cursor-pointer`}
                   >
                     <BookOpen
                       className={`h-5 w-5 ${
@@ -446,7 +443,7 @@ export function Header() {
                     href="/my-orders"
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent w-full text-left ${
                       isOrdersPage ? "text-primary" : "text-foreground"
-                    }`}
+                    } cursor-pointer`}
                   >
                     <ShoppingBag
                       className={`h-5 w-5 ${
@@ -462,7 +459,7 @@ export function Header() {
                         href="/owner/dashboard"
                         className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent ${
                           isOwnerPage ? "text-primary" : "text-foreground"
-                        }`}
+                        } cursor-pointer`}
                       >
                         <span>Quản lý tài khoản</span>
                       </Link>
@@ -498,7 +495,7 @@ export function Header() {
 
                 <div className="space-y-3">
                   <Link href="/login" className="block">
-                    <Button className="w-full bg-primary text-primary-foreground">
+                    <Button className="w-full bg-primary text-primary-foreground cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
                       Đăng nhập
                     </Button>
@@ -507,7 +504,7 @@ export function Header() {
                   <Link href="/register" className="block">
                     <Button
                       variant="outline"
-                      className="w-full text-foreground"
+                      className="w-full text-foreground cursor-pointer"
                     >
                       Đăng ký
                     </Button>
@@ -518,7 +515,7 @@ export function Header() {
                   <nav className="space-y-2">
                     <Link
                       href="/"
-                      className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors"
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors cursor-pointer"
                     >
                       <Home className="h-5 w-5 text-muted-foreground" />
                       <span className="text-foreground">Trang chủ</span>
@@ -528,7 +525,7 @@ export function Header() {
                       href="/guide"
                       className={`flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-colors ${
                         isGuidePage ? "text-primary" : "text-foreground"
-                      }`}
+                      } cursor-pointer`}
                     >
                       <BookOpen
                         className={`h-5 w-5 ${

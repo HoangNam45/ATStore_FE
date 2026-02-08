@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { games } from "@/data/games";
 
 const baseUrl = "https://qtat.website";
@@ -6,6 +6,11 @@ const baseUrl = "https://qtat.website";
 interface Props {
   params: Promise<{ slug: string }>;
 }
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 0.8,
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
