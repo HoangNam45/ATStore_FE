@@ -12,7 +12,7 @@ interface GameCardProps {
 export default function GameCard({ name, image, slug }: GameCardProps) {
   return (
     <Link href={`/games/${slug}`}>
-      <div className="group relative overflow-hidden rounded-lg bg-white shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 dark:bg-zinc-900">
+      <div className="group relative overflow-hidden  rounded-lg bg-white shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 dark:bg-zinc-900">
         <div className="relative aspect-[3/2] w-full overflow-hidden">
           <Image
             src={image}

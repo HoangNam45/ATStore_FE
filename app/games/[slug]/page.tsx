@@ -101,7 +101,7 @@ export default function GamePage() {
               <button
                 key={account.id}
                 onClick={() => handleAccountClick(account.id)}
-                className="overflow-hidden rounded-lg bg-white text-left shadow-md transition-shadow hover:shadow-lg dark:bg-zinc-900"
+                className="overflow-hidden cursor-pointer rounded-lg bg-white text-left shadow-md transition-shadow hover:shadow-lg dark:bg-zinc-900"
               >
                 <div className="relative aspect-3/2 w-full">
                   <Image
@@ -133,10 +133,10 @@ export default function GamePage() {
                         <span className="font-semibold text-base text-[oklch(0.75_0.15_350)]">
                           {(() => {
                             const minPrice = Math.min(
-                              ...account.categories.map((c) => c.price)
+                              ...account.categories.map((c) => c.price),
                             );
                             const maxPrice = Math.max(
-                              ...account.categories.map((c) => c.price)
+                              ...account.categories.map((c) => c.price),
                             );
 
                             if (minPrice === maxPrice) {
@@ -144,7 +144,7 @@ export default function GamePage() {
                             }
 
                             return `${minPrice.toLocaleString(
-                              "vi-VN"
+                              "vi-VN",
                             )}đ - ${maxPrice.toLocaleString("vi-VN")}đ`;
                           })()}
                         </span>
