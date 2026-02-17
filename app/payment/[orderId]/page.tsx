@@ -17,11 +17,27 @@ export default function PaymentPage() {
   const orderId = params.orderId as string;
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
-  // TODO: Replace with actual bank info from backend/config
-  const bankInfo: BankInfo = {
-    bankName: "VietinBank",
-    accountNo: "106880289426",
-    accountName: "QUANG THI ANH TUYET",
+  // Parse bank info from qrCodeUrl
+  const parseBankInfoFromQR = (qrUrl: string): BankInfo => {
+    try {
+      const url = new URL(qrUrl);
+      const accountNo = url.searchParams.get("acc") || "";
+      const bankName = url.searchParams.get("bank") || "";
+
+      // TODO: Get account holder name from backend/config in future
+      // For now, using a default value as it's not in the QR URL
+      const accountName = "QUANG THI ANH TUYET";
+
+      return { bankName, accountNo, accountName };
+    } catch (error) {
+      console.error("Failed to parse QR URL:", error);
+      // Fallback to hardcoded values
+      return {
+        bankName: "VietinBank",
+        accountNo: "106880289426",
+        accountName: "QUANG THI ANH TUYET",
+      };
+    }
   };
 
   const { data: order, isLoading } = useQuery<Order>({
@@ -32,6 +48,11 @@ export default function PaymentPage() {
     },
     retry: 1,
   });
+
+  // Extract bank info from order's QR code URL
+  const bankInfo = order?.qrCodeUrl
+    ? parseBankInfoFromQR(order.qrCodeUrl)
+    : { bankName: "", accountNo: "", accountName: "" };
 
   // Calculate time left when order data is loaded
   useEffect(() => {
