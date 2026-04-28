@@ -53,39 +53,43 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="relative min-h-screen bg-gradient-to-b from-zinc-50 via-pink-50/30 to-white font-sans dark:from-black dark:via-zinc-900 dark:to-black overflow-hidden">
-        {/* Decorative background elements */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[oklch(0.75_0.15_350)]/5 rounded-full blur-3xl -z-10" />
-        <div className="absolute bottom-1/3 left-0 w-96 h-96 bg-[oklch(0.65_0.18_320)]/5 rounded-full blur-3xl -z-10" />
+      <div className="relative min-h-screen bg-gradient-to-b from-amber-50 via-orange-50/50 to-rose-50 dark:from-amber-950/30 dark:via-orange-950/20 dark:to-rose-950/30 font-serif overflow-hidden">
+        {/* Vintage paper texture */}
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none -z-10" style={{
+          backgroundImage: 'url("data:image/svg+xml,%3Csvg width="200" height="200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="paper"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.4" numOctaves="5" result="noise" /%3E%3CfeDisplacementMap in="SourceGraphic" in2="noise" scale="30" /%3E%3C/filter%3E%3Crect width="200" height="200" filter="url(%23paper)" fill="black" /%3E%3C/svg%3E")'
+        }} />
 
         <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-          {/* Header Section */}
-          <div className="mb-12 sm:mb-16 text-center space-y-4">
-            <div className="inline-block">
-              <span className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-[oklch(0.75_0.15_350)] via-[oklch(0.65_0.18_320)] to-[oklch(0.75_0.15_350)] bg-clip-text text-transparent">
-                ATStore
-              </span>
+          {/* Vintage Header Section */}
+          <div className="mb-12 sm:mb-16 text-center space-y-6">
+            {/* Decorative vintage frame */}
+            <div className="inline-block mx-auto">
+              <div className="border-4 border-double border-amber-900/40 dark:border-amber-600/40 px-8 py-6 bg-gradient-to-b from-amber-100/60 to-rose-100/40 dark:from-amber-900/20 dark:to-rose-900/20">
+                <span className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-amber-950 dark:text-amber-100 tracking-widest">
+                  AT STORE
+                </span>
+              </div>
             </div>
             
-            <h1 className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 space-y-2">
-              <div className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">
-                Chào mọi người đến với web của tui 💕
+            <h1 className="space-y-3">
+              <div className="text-base sm:text-lg md:text-xl font-serif font-semibold text-amber-900 dark:text-amber-100 tracking-wide">
+                Chào mọi người đến với web của tui
               </div>
-              <p className="text-gray-600 dark:text-gray-400 font-medium">
-                Nơi bán những tài khoản reroll chất lượng cao cho các game yêu thích
+              <p className="text-sm sm:text-base text-amber-800 dark:text-amber-200 font-serif leading-relaxed max-w-2xl mx-auto">
+                Nơi bán những tài khoản reroll chất lượng cao cho các game yêu thích của bạn
               </p>
             </h1>
 
-            {/* Decorative divider */}
-            <div className="flex items-center justify-center gap-3 pt-2">
-              <div className="h-px w-8 bg-gradient-to-r from-transparent to-[oklch(0.75_0.15_350)]" />
-              <div className="w-2 h-2 rounded-full bg-[oklch(0.75_0.15_350)]" />
-              <div className="h-px w-8 bg-gradient-to-l from-transparent to-[oklch(0.75_0.15_350)]" />
+            {/* Vintage ornamental divider */}
+            <div className="flex items-center justify-center gap-4 pt-2">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-[oklch(0.75_0.15_350)]" />
+              <span className="text-amber-900 dark:text-amber-200 text-lg">✦</span>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-[oklch(0.75_0.15_350)]" />
             </div>
           </div>
 
           {/* Games Grid - Responsive for all devices */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 auto-rows-max">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 auto-rows-max">
             {games.map((game) => (
               <div key={game.id} className="h-full">
                 <GameCard
@@ -97,11 +101,15 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Footer Message */}
-          <div className="mt-12 sm:mt-16 text-center">
-            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
-              ✨ Các tài khoản được kiểm tra kỹ lưỡng và đảm bảo an toàn ✨
-            </p>
+          {/* Vintage Footer Message */}
+          <div className="mt-12 sm:mt-16 text-center space-y-2">
+            <div className="flex items-center justify-center gap-2 text-amber-900 dark:text-amber-200">
+              <span>✦</span>
+              <p className="text-xs sm:text-sm font-serif italic">
+                Các tài khoản được kiểm tra kỹ lưỡng và đảm bảo an toàn
+              </p>
+              <span>✦</span>
+            </div>
           </div>
         </div>
       </div>
