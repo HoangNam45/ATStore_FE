@@ -53,8 +53,8 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
-        <div className="container mx-auto px-6 py-6 sm:px-12 sm:py-12">
+      <div className="min-h-screen  bg-zinc-50 font-sans dark:bg-black">
+        <div className="container mx-auto px-6 py-12 sm:px-12 sm:py-20">
           <div className="mb-6 text-center sm:mb-12">
             <h1 className="text-sm text-gray-600 dark:text-gray-400 sm:text-base">
               <div>Chào mọi người đến với web của tui {"(>_<)"}</div>

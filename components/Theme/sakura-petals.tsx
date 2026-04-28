@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export function SakuraPetals() {
+  const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -22,8 +24,13 @@ export function SakuraPetals() {
       delay: `${Math.random() * 12}s`,
       duration: `${10 + Math.random() * 12}s`,
       size: `${8 + Math.random() * 8}px`,
-    }))
+    })),
   );
+
+  // Hide sakura on payment page
+  if (pathname.includes("/payment")) {
+    return null;
+  }
 
   // Show fewer petals on mobile (6 instead of 17)
   const visiblePetals = isMobile ? petals.slice(0, 6) : petals;

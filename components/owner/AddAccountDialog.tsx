@@ -28,29 +28,22 @@ export function AddAccountDialog({
   listId,
   categoryId,
 }: AddAccountDialogProps) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [credentials, setCredentials] = useState("");
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: () =>
-      accountService.addAccountToCategory(
-        listId,
-        categoryId,
-        username,
-        password
-      ),
+      accountService.addAccountToCategory(listId, categoryId, credentials),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ownerAccounts"] });
       onOpenChange(false);
-      setUsername("");
-      setPassword("");
+      setCredentials("");
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (username.trim() && password.trim()) {
+    if (credentials.trim()) {
       mutation.mutate();
     }
   };
@@ -60,32 +53,18 @@ export function AddAccountDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Thêm tài khoản mới</DialogTitle>
-          <DialogDescription>
-            Nhập thông tin tài khoản mới để thêm vào danh mục
-          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Tài khoản</Label>
-            <Input
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Nhập tài khoản"
+            <Label htmlFor="credentials">Thông tin tài khoản</Label>
+            <textarea
+              id="credentials"
+              value={credentials}
+              onChange={(e) => setCredentials(e.target.value)}
               required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="password">Mật khẩu</Label>
-            <Input
-              id="password"
-              type="text"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Nhập mật khẩu"
-              required
+              className="w-full px-3 py-2 border border-input rounded-md text-sm"
+              rows={4}
             />
           </div>
 

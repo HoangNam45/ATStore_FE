@@ -56,10 +56,10 @@ export default function AccountsPage() {
   const [openGames, setOpenGames] = useState<Record<string, boolean>>({});
   const [openLists, setOpenLists] = useState<Record<string, boolean>>({});
   const [openCategories, setOpenCategories] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
   const [showPasswords, setShowPasswords] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
   const [selectedGameSlugs, setSelectedGameSlugs] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<
@@ -81,8 +81,9 @@ export default function AccountsPage() {
     listId: string;
     categoryId: string;
     accountId: string;
-    currentUsername: string;
-    currentPassword: string;
+    currentCredentials?: string; // New format
+    currentUsername?: string; // Old format
+    currentPassword?: string; // Old format
     currentStatus: "available" | "sold";
   } | null>(null);
   const [addingAccountTo, setAddingAccountTo] = useState<{
@@ -113,12 +114,12 @@ export default function AccountsPage() {
     selectedGameSlugs.length === 0
       ? gameAccountsGroups
       : gameAccountsGroups.filter((game) =>
-          selectedGameSlugs.includes(game.slug)
+          selectedGameSlugs.includes(game.slug),
         );
 
   const toggleGameFilter = (slug: string) => {
     setSelectedGameSlugs((prev) =>
-      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
+      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug],
     );
   };
 
@@ -344,7 +345,7 @@ export default function AccountsPage() {
                                   e.stopPropagation();
                                   const totalAccounts = list.categories.reduce(
                                     (sum, cat) => sum + cat.accounts.length,
-                                    0
+                                    0,
                                   );
                                   setDeletingList({
                                     listId: list.id,
@@ -470,7 +471,7 @@ export default function AccountsPage() {
                                       <div className="px-2.5 pb-2.5 space-y-2">
                                         {/* Accounts */}
                                         {filterAndSortAccounts(
-                                          category.accounts
+                                          category.accounts,
                                         ).map((account) => (
                                           <Card
                                             key={account.id}
@@ -505,6 +506,8 @@ export default function AccountsPage() {
                                                         listId: list.id,
                                                         categoryId: category.id,
                                                         accountId: account.id,
+                                                        currentCredentials:
+                                                          account.credentials,
                                                         currentUsername:
                                                           account.username,
                                                         currentPassword:
@@ -534,45 +537,85 @@ export default function AccountsPage() {
                                               </div>
 
                                               <div className="space-y-1.5 text-xs">
-                                                <div className="flex items-center justify-between">
-                                                  <span className="text-muted-foreground">
-                                                    Username:
-                                                  </span>
-                                                  <span className="font-mono font-medium">
-                                                    {account.username}
-                                                  </span>
-                                                </div>
-
-                                                <div className="flex items-center justify-between">
-                                                  <span className="text-muted-foreground">
-                                                    Password:
-                                                  </span>
-                                                  <div className="flex items-center gap-2">
-                                                    <span className="font-mono font-medium">
-                                                      {showPasswords[account.id]
-                                                        ? account.password
-                                                        : "••••••••"}
+                                                {account.credentials ? (
+                                                  // New format: single credentials
+                                                  <div className="flex items-center justify-between">
+                                                    <span className="text-muted-foreground">
+                                                      Thông tin tài khoản:
                                                     </span>
-                                                    <Button
-                                                      variant="ghost"
-                                                      size="icon"
-                                                      className="h-5 w-5"
-                                                      onClick={() =>
-                                                        togglePassword(
+                                                    <div className="flex items-center gap-2">
+                                                      <span className="font-mono font-medium break-all">
+                                                        {showPasswords[
                                                           account.id
-                                                        )
-                                                      }
-                                                    >
-                                                      {showPasswords[
-                                                        account.id
-                                                      ] ? (
-                                                        <EyeOff className="h-3 w-3" />
-                                                      ) : (
-                                                        <Eye className="h-3 w-3" />
-                                                      )}
-                                                    </Button>
+                                                        ]
+                                                          ? account.credentials
+                                                          : "••••••••"}
+                                                      </span>
+                                                      <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="h-5 w-5 shrink-0"
+                                                        onClick={() =>
+                                                          togglePassword(
+                                                            account.id,
+                                                          )
+                                                        }
+                                                      >
+                                                        {showPasswords[
+                                                          account.id
+                                                        ] ? (
+                                                          <EyeOff className="h-3 w-3" />
+                                                        ) : (
+                                                          <Eye className="h-3 w-3" />
+                                                        )}
+                                                      </Button>
+                                                    </div>
                                                   </div>
-                                                </div>
+                                                ) : (
+                                                  // Old format: separate username and password
+                                                  <>
+                                                    <div className="flex items-center justify-between">
+                                                      <span className="text-muted-foreground">
+                                                        Tài khoản:
+                                                      </span>
+                                                      <span className="font-mono font-medium">
+                                                        {account.username}
+                                                      </span>
+                                                    </div>
+                                                    <div className="flex items-center justify-between">
+                                                      <span className="text-muted-foreground">
+                                                        Mật khẩu:
+                                                      </span>
+                                                      <div className="flex items-center gap-2">
+                                                        <span className="font-mono font-medium">
+                                                          {showPasswords[
+                                                            account.id
+                                                          ]
+                                                            ? account.password
+                                                            : "••••••••"}
+                                                        </span>
+                                                        <Button
+                                                          variant="ghost"
+                                                          size="icon"
+                                                          className="h-5 w-5 shrink-0"
+                                                          onClick={() =>
+                                                            togglePassword(
+                                                              account.id,
+                                                            )
+                                                          }
+                                                        >
+                                                          {showPasswords[
+                                                            account.id
+                                                          ] ? (
+                                                            <EyeOff className="h-3 w-3" />
+                                                          ) : (
+                                                            <Eye className="h-3 w-3" />
+                                                          )}
+                                                        </Button>
+                                                      </div>
+                                                    </div>
+                                                  </>
+                                                )}
 
                                                 <div className="flex items-center justify-between pt-1 border-t">
                                                   <span className="text-muted-foreground">
@@ -632,6 +675,7 @@ export default function AccountsPage() {
           listId={editingAccount.listId}
           categoryId={editingAccount.categoryId}
           accountId={editingAccount.accountId}
+          currentCredentials={editingAccount.currentCredentials}
           currentUsername={editingAccount.currentUsername}
           currentPassword={editingAccount.currentPassword}
           currentStatus={editingAccount.currentStatus}

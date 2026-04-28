@@ -26,7 +26,7 @@ interface Category {
   id: string;
   name: string;
   price: number;
-  accounts: { username: string; password: string }[];
+  accounts: { credentials: string }[];
 }
 
 export default function NewAccountPage() {
@@ -51,7 +51,7 @@ export default function NewAccountPage() {
         id: Date.now().toString(),
         name: "",
         price: 0,
-        accounts: [{ username: "", password: "" }],
+        accounts: [{ credentials: "" }],
       },
     ]);
   };
@@ -63,10 +63,10 @@ export default function NewAccountPage() {
   const updateCategory = (
     id: string,
     field: keyof Category,
-    value: string | number
+    value: string | number,
   ) => {
     setCategories(
-      categories.map((c) => (c.id === id ? { ...c, [field]: value } : c))
+      categories.map((c) => (c.id === id ? { ...c, [field]: value } : c)),
     );
   };
 
@@ -76,10 +76,10 @@ export default function NewAccountPage() {
         c.id === categoryId
           ? {
               ...c,
-              accounts: [...c.accounts, { username: "", password: "" }],
+              accounts: [...c.accounts, { credentials: "" }],
             }
-          : c
-      )
+          : c,
+      ),
     );
   };
 
@@ -91,28 +91,23 @@ export default function NewAccountPage() {
               ...c,
               accounts: c.accounts.filter((_, i) => i !== index),
             }
-          : c
-      )
+          : c,
+      ),
     );
   };
 
-  const updateAccount = (
-    categoryId: string,
-    index: number,
-    field: "username" | "password",
-    value: string
-  ) => {
+  const updateAccount = (categoryId: string, index: number, value: string) => {
     setCategories(
       categories.map((c) =>
         c.id === categoryId
           ? {
               ...c,
               accounts: c.accounts.map((acc, i) =>
-                i === index ? { ...acc, [field]: value } : acc
+                i === index ? { ...acc, credentials: value } : acc,
               ),
             }
-          : c
-      )
+          : c,
+      ),
     );
   };
 
@@ -191,8 +186,8 @@ export default function NewAccountPage() {
         return;
       }
       for (const account of category.accounts) {
-        if (!account.username.trim() || !account.password.trim()) {
-          alert("Vui lòng điền đầy đủ tài khoản và mật khẩu");
+        if (!account.credentials.trim()) {
+          alert("Vui lòng điền thông tin tài khoản");
           return;
         }
       }
@@ -472,7 +467,7 @@ export default function NewAccountPage() {
                             updateCategory(
                               category.id,
                               "price",
-                              parseInt(e.target.value) || 0
+                              parseInt(e.target.value) || 0,
                             )
                           }
                           placeholder="0"
@@ -485,7 +480,7 @@ export default function NewAccountPage() {
                     <div>
                       <div className="flex items-center justify-between mb-2 gap-2">
                         <Label className="text-xs md:text-sm">
-                          Tài khoản & mật khẩu
+                          Thông tin tài khoản
                         </Label>
                         <Button
                           type="button"
@@ -501,31 +496,16 @@ export default function NewAccountPage() {
                       <div className="space-y-2">
                         {category.accounts.map((account, accIndex) => (
                           <div key={accIndex} className="flex gap-1 md:gap-2">
-                            <Input
-                              value={account.username}
+                            <textarea
+                              value={account.credentials}
                               onChange={(e) =>
                                 updateAccount(
                                   category.id,
                                   accIndex,
-                                  "username",
-                                  e.target.value
+                                  e.target.value,
                                 )
                               }
-                              placeholder="Tài khoản"
-                              className="flex-1 text-xs md:text-sm h-8 md:h-10"
-                            />
-                            <Input
-                              value={account.password}
-                              onChange={(e) =>
-                                updateAccount(
-                                  category.id,
-                                  accIndex,
-                                  "password",
-                                  e.target.value
-                                )
-                              }
-                              placeholder="Mật khẩu"
-                              className="flex-1 text-xs md:text-sm h-8 md:h-10"
+                              className="flex-1 text-xs md:text-sm h-16 md:h-20 px-2 md:px-3 py-1 md:py-2 border border-input rounded-md"
                             />
                             {category.accounts.length > 1 && (
                               <Button

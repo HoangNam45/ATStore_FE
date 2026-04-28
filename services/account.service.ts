@@ -11,16 +11,16 @@ export interface CreateAccountData {
     name: string;
     price: number;
     accounts: {
-      username: string;
-      password: string;
+      credentials: string;
     }[];
   }[];
 }
 
 export interface AccountCredential {
   id: string;
-  username: string;
-  password: string;
+  credentials?: string; // New format: single credentials field
+  username?: string; // Old format: separate username field
+  password?: string; // Old format: separate password field
   price: number;
   status: "available" | "sold";
 }
@@ -114,7 +114,7 @@ export const accountService = {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      }
+      },
     );
 
     const accountLists = response.data.data;
@@ -149,7 +149,7 @@ export const accountService = {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      }
+      },
     );
     return response.data;
   },
@@ -158,7 +158,7 @@ export const accountService = {
     listId: string,
     categoryId: string,
     name: string,
-    price: number
+    price: number,
   ) {
     const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.post(
@@ -173,7 +173,7 @@ export const accountService = {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      }
+      },
     );
     return response.data;
   },
@@ -182,9 +182,8 @@ export const accountService = {
     listId: string,
     categoryId: string,
     accountId: string,
-    username: string,
-    password: string,
-    status: "available" | "sold"
+    credentials: string,
+    status: "available" | "sold",
   ) {
     const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.post(
@@ -193,15 +192,14 @@ export const accountService = {
         listId,
         categoryId,
         accountId,
-        username,
-        password,
+        credentials,
         status,
       },
       {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      }
+      },
     );
     return response.data;
   },
@@ -231,8 +229,7 @@ export const accountService = {
   async addAccountToCategory(
     listId: string,
     categoryId: string,
-    username: string,
-    password: string
+    credentials: string,
   ) {
     const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.post(
@@ -240,14 +237,13 @@ export const accountService = {
       {
         listId,
         categoryId,
-        username,
-        password,
+        credentials,
       },
       {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      }
+      },
     );
     return response.data;
   },
@@ -265,7 +261,7 @@ export const accountService = {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      }
+      },
     );
     return response.data;
   },
@@ -289,7 +285,7 @@ export const accountService = {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      }
+      },
     );
     return response.data;
   },
@@ -307,7 +303,7 @@ export const accountService = {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      }
+      },
     );
     return response.data;
   },

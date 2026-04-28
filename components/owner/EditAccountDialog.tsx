@@ -28,8 +28,9 @@ interface EditAccountDialogProps {
   listId: string;
   categoryId: string;
   accountId: string;
-  currentUsername: string;
-  currentPassword: string;
+  currentCredentials?: string; // New format
+  currentUsername?: string; // Old format
+  currentPassword?: string; // Old format
   currentStatus: "available" | "sold";
 }
 
@@ -39,25 +40,42 @@ export function EditAccountDialog({
   listId,
   categoryId,
   accountId,
+  currentCredentials,
   currentUsername,
   currentPassword,
   currentStatus,
 }: EditAccountDialogProps) {
-  const [username, setUsername] = useState(currentUsername);
-  const [password, setPassword] = useState(currentPassword);
+  // Determine format: new (credentials) or old (username + password)
+  const isNewFormat = !!currentCredentials;
+
+  const [credentials, setCredentials] = useState(currentCredentials || "");
+  const [username, setUsername] = useState(currentUsername || "");
+  const [password, setPassword] = useState(currentPassword || "");
   const [status, setStatus] = useState<"available" | "sold">(currentStatus);
   const queryClient = useQueryClient();
 
   const updateMutation = useMutation({
-    mutationFn: () =>
-      accountService.updateAccount(
-        listId,
-        categoryId,
-        accountId,
-        username,
-        password,
-        status
-      ),
+    mutationFn: () => {
+      if (isNewFormat) {
+        return accountService.updateAccount(
+          listId,
+          categoryId,
+          accountId,
+          credentials,
+          status,
+        );
+      } else {
+        // For old format, we need to handle username/password
+        // Send as credentials with separator for now
+        return accountService.updateAccount(
+          listId,
+          categoryId,
+          accountId,
+          `${username}:${password}`,
+          status,
+        );
+      }
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ownerAccounts"] });
       onOpenChange(false);
@@ -74,35 +92,51 @@ export function EditAccountDialog({
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
-            <DialogTitle>Edit Account</DialogTitle>
+            <DialogTitle>Chỉnh sửa tài khoản</DialogTitle>
             <DialogDescription>
-              Update the account credentials and status.
+              Cập nhật thông tin tài khoản và trạng thái.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
+            {isNewFormat ? (
+              <div className="grid gap-2">
+                <Label htmlFor="credentials">Thông tin tài khoản</Label>
+                <textarea
+                  id="credentials"
+                  value={credentials}
+                  onChange={(e) => setCredentials(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                  rows={4}
+                />
+              </div>
+            ) : (
+              <>
+                <div className="grid gap-2">
+                  <Label htmlFor="username">Tài khoản</Label>
+                  <Input
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Nhập tài khoản"
+                    required
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="password">Mật khẩu</Label>
+                  <Input
+                    id="password"
+                    type="text"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Nhập mật khẩu"
+                    required
+                  />
+                </div>
+              </>
+            )}
             <div className="grid gap-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="status">Status</Label>
+              <Label htmlFor="status">Trạng thái</Label>
               <Select
                 value={status}
                 onValueChange={(value) =>
@@ -110,11 +144,11 @@ export function EditAccountDialog({
                 }
               >
                 <SelectTrigger id="status">
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder="Chọn trạng thái" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="available">Available</SelectItem>
-                  <SelectItem value="sold">Sold</SelectItem>
+                  <SelectItem value="available">Có sẵn</SelectItem>
+                  <SelectItem value="sold">Đã bán</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -125,10 +159,10 @@ export function EditAccountDialog({
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              Hủy
             </Button>
             <Button type="submit" disabled={updateMutation.isPending}>
-              {updateMutation.isPending ? "Saving..." : "Save Changes"}
+              {updateMutation.isPending ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>
           </DialogFooter>
         </form>
