@@ -15,13 +15,6 @@ export const games: Game[] = [
     servers: ["JP", "Global"],
   },
   {
-    id: 2,
-    name: "BanG Dream! Girls Band Party!",
-    slug: "bandori",
-    image: "/images/games/bangdgbp.jfif",
-    servers: ["JP"],
-  },
-  {
     id: 3,
     name: "Uma Musume Pretty Derby",
     slug: "uma-musume",
@@ -29,32 +22,11 @@ export const games: Game[] = [
     servers: ["JP", "Global"],
   },
   {
-    id: 4,
-    name: "Cookie Run: Kingdom",
-    slug: "cookie-run-kingdom",
-    image: "/images/games/cookie-run.jfif",
-    servers: [],
-  },
-  {
-    id: 5,
-    name: "D4DJ Groovy Mix",
-    slug: "d4dj",
-    image: "/images/games/d4dj.jfif",
-    servers: ["JP"],
-  },
-  {
     id: 6,
     name: "Love and Deepspace",
     slug: "love-and-deepspace",
     image: "/images/games/lads.jfif",
     servers: ["American", "Asian", "Random Server"],
-  },
-  {
-    id: 7,
-    name: "NIKKE: The Goddess of Victory",
-    slug: "nikke",
-    image: "/images/games/Nikke.jfif",
-    servers: ["JP", "Global"],
   },
   {
     id: 8,
