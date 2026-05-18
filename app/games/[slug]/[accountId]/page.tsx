@@ -24,7 +24,7 @@ export default function AccountDetailPage() {
   const accountId = params.accountId as string;
 
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
+    null,
   );
   const [quantity, setQuantity] = useState(1);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -56,7 +56,12 @@ export default function AccountDetailPage() {
       account.categories.length > 0 &&
       !selectedCategory
     ) {
-      setSelectedCategory(account.categories[0]);
+      const availableCategory = account.categories.find(
+        (c) => c.accountCount > 0,
+      );
+      if (availableCategory) {
+        setSelectedCategory(availableCategory);
+      }
     }
   }, [account]);
 
@@ -218,7 +223,7 @@ export default function AccountDetailPage() {
                 value={selectedCategory?.name || ""}
                 onValueChange={(value) => {
                   const category = account.categories.find(
-                    (c) => c.name === value
+                    (c) => c.name === value,
                   );
                   if (category) handleCategorySelect(category);
                 }}
@@ -235,19 +240,21 @@ export default function AccountDetailPage() {
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  {account.categories.map((category, idx) => (
-                    <SelectItem key={idx} value={category.name}>
-                      <span className="flex items-center justify-between gap-4">
-                        <span>{category.name}</span>
-                        <span className="text-[oklch(0.75_0.15_350)]">
-                          {category.price.toLocaleString("vi-VN")}đ
+                  {account.categories
+                    .filter((c) => c.accountCount > 0)
+                    .map((category, idx) => (
+                      <SelectItem key={idx} value={category.name}>
+                        <span className="flex items-center justify-between gap-4">
+                          <span>{category.name}</span>
+                          <span className="text-[oklch(0.75_0.15_350)]">
+                            {category.price.toLocaleString("vi-VN")}đ
+                          </span>
+                          <span className="text-xs text-zinc-500">
+                            (Còn {category.accountCount} acc)
+                          </span>
                         </span>
-                        <span className="text-xs text-zinc-500">
-                          (Còn {category.accountCount} acc)
-                        </span>
-                      </span>
-                    </SelectItem>
-                  ))}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -312,8 +319,8 @@ export default function AccountDetailPage() {
                 };
                 router.push(
                   `/checkout?data=${encodeURIComponent(
-                    JSON.stringify(checkoutData)
-                  )}`
+                    JSON.stringify(checkoutData),
+                  )}`,
                 );
               }}
               disabled={!selectedCategory || selectedCategory.accountCount <= 0}
