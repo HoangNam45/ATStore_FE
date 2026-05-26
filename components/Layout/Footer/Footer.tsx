@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
 
 export function Footer() {
@@ -6,11 +7,17 @@ export function Footer() {
       <div className="container mx-auto px-4 py-2">
         <div className="flex justify-center">
           <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-xl">
-                AT
-              </div>
-              <span className="font-bold text-xl text-foreground">Store</span>
+            <div className="flex flex-col items-center gap-2">
+              <Image
+                src="/header_img.png"
+                alt="Raven sito logo"
+                width={40}
+                height={40}
+                className="rounded-xl"
+              />
+              <span className="font-bold text-xl text-foreground">
+                Raven sito
+              </span>
             </div>
 
             <div className="flex gap-6">
@@ -28,9 +35,6 @@ export function Footer() {
               </a>
             </div>
           </div>
-        </div>
-        <div className="mt-12 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          <p>© 2025. All rights reserved. Made by Nam Hoang.</p>
         </div>
       </div>
     </footer>

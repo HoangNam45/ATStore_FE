@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   Menu,
@@ -60,10 +61,15 @@ export function Header() {
         <div className="container mx-auto flex items-center justify-between px-6 py-3">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-lg">
-                AT
-              </div>
-              <span className="font-bold text-lg text-foreground">Store</span>
+              <Image
+                src="/header_img.png"
+                alt="Raven sito logo"
+                width={36}
+                height={36}
+              />
+              <span className="font-bold text-lg text-foreground">
+                Raven sito
+              </span>
             </Link>
           </div>
 
@@ -481,12 +487,16 @@ export function Header() {
               <div className="space-y-4">
                 <div className="text-center py-8">
                   <div className="flex justify-center mb-4">
-                    <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground font-bold text-2xl">
-                      AT
-                    </div>
+                    <Image
+                      src="/header_img.png"
+                      alt="Raven sito logo"
+                      width={64}
+                      height={64}
+                      className="rounded-2xl"
+                    />
                   </div>
                   <h3 className="text-base font-semibold mb-2">
-                    Chào mừng đến AT Store
+                    Chào mừng đến Raven sito
                   </h3>
                   <p className="text-xs text-muted-foreground mb-6">
                     Đăng nhập để trải nghiệm đầy đủ tính năng
