@@ -6,6 +6,10 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Header } from "@/components/Layout/Header/Header";
 import { SakuraPetals } from "@/components/Theme/sakura-petals";
 import { Footer } from "@/components/Layout/Footer/Footer";
+import { MaintenancePage } from "@/components/MaintenancePage";
+
+// Bật chế độ bảo trì - đặt thành true để hiển thị trang bảo trì
+const MAINTENANCE_MODE = true;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -86,6 +90,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Nếu ở chế độ bảo trì, chỉ hiển thị trang bảo trì cho tất cả người dùng
+  if (MAINTENANCE_MODE) {
+    return (
+      <html lang="vi">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <MaintenancePage />
+        </body>
+      </html>
+    );
+  }
+
   return (
     <html lang="vi">
       <body
