@@ -38,7 +38,8 @@ export interface Order {
   server: string;
   displayImage: string;
   userId?: string;
-  status: "pending" | "paid" | "expired" | "cancelled";
+  status: "pending" | "paid" | "expired" | "cancelled" | "failed";
+  failureReason?: string;
   qrCodeUrl?: string;
   createdAt: { _seconds: number; _nanoseconds: number };
   expiresAt: { _seconds: number; _nanoseconds: number };

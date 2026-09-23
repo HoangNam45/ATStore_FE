@@ -1,6 +1,7 @@
 "use client";
 
 import { initializeApp, getApps } from "firebase/app";
+import { getFirestore, doc, onSnapshot, Unsubscribe } from "firebase/firestore";
 import {
   getAuth,
   GoogleAuthProvider,
@@ -18,6 +19,7 @@ const firebaseConfig = {
 
 // Only initialize Firebase in browser environment
 let auth: any;
+let db: ReturnType<typeof getFirestore> | undefined;
 let googleProvider: GoogleAuthProvider | undefined;
 let facebookProvider: FacebookAuthProvider | undefined;
 
@@ -28,8 +30,27 @@ if (typeof window !== "undefined") {
   }
 
   auth = getAuth();
+  db = getFirestore();
   googleProvider = new GoogleAuthProvider();
   facebookProvider = new FacebookAuthProvider();
 }
 
-export { auth, googleProvider, facebookProvider };
+export { auth, googleProvider, facebookProvider, db };
+
+/**
+ * Subscribe to the server-owned payment status projection. The client never
+ * writes payment state and does not need to poll the API while waiting.
+ */
+export const subscribeToPaymentStatus = (
+  orderId: string,
+  onChange: (status: { status?: string; failureReason?: string }) => void,
+  onError?: (error: Error) => void,
+): Unsubscribe => {
+  if (!db) throw new Error("Firebase not initialized");
+
+  return onSnapshot(
+    doc(db, "paymentStatus", orderId),
+    (snapshot) => onChange(snapshot.exists() ? (snapshot.data() as any) : {}),
+    (error) => onError?.(error),
+  );
+};

@@ -10,6 +10,7 @@ import { CreditCard, ArrowLeft, Clock } from "lucide-react";
 import Image from "next/image";
 import { orderService } from "@/services/order.service";
 import { Order, BankInfo } from "@/types/order.types";
+import { subscribeToPaymentStatus } from "@/lib/firebase/firebaseClient";
 
 export default function PaymentPage() {
   const params = useParams();
@@ -40,25 +41,39 @@ export default function PaymentPage() {
     }
   };
 
-  const { data: order, isLoading } = useQuery<Order>({
+  const { data: fetchedOrder, isLoading } = useQuery<Order>({
     queryKey: ["order", orderId],
     queryFn: () => orderService.getOrder(orderId),
-    refetchInterval: (query) => {
-      return query.state.data?.status === "pending" ? 10000 : false;
-    },
     retry: 1,
   });
 
+  const [liveStatus, setLiveStatus] = useState<Pick<Order, "status" | "failureReason"> | null>(null);
+
+  useEffect(() => {
+    if (!orderId) return;
+    return subscribeToPaymentStatus(orderId, (payment) => {
+      if (payment.status) {
+        setLiveStatus({
+          status: payment.status as Order["status"],
+          failureReason: payment.failureReason,
+        });
+      }
+    }, (error) => console.error("Payment realtime listener failed:", error));
+  }, [orderId]);
+
+  const displayedOrder = fetchedOrder
+    ? { ...fetchedOrder, ...(liveStatus ?? {}) }
+    : undefined;
   // Extract bank info from order's QR code URL
-  const bankInfo = order?.qrCodeUrl
-    ? parseBankInfoFromQR(order.qrCodeUrl)
+  const bankInfo = displayedOrder?.qrCodeUrl
+    ? parseBankInfoFromQR(displayedOrder.qrCodeUrl)
     : { bankName: "", accountNo: "", accountName: "" };
 
   // Calculate time left when order data is loaded
   useEffect(() => {
-    if (!order) return;
+    if (!displayedOrder) return;
 
-    const expiresAt = new Date(order.expiresAt._seconds * 1000);
+    const expiresAt = new Date(displayedOrder.expiresAt._seconds * 1000);
     const now = new Date();
     const diff = expiresAt.getTime() - now.getTime();
 
@@ -68,17 +83,17 @@ export default function PaymentPage() {
     }, 0);
 
     return () => clearTimeout(timeoutId);
-  }, [order]);
+  }, [displayedOrder]);
 
   // Handle payment status changes
   useEffect(() => {
-    if (!order) return;
+    if (!displayedOrder) return;
 
-    if (order.status === "paid") {
+    if (displayedOrder.status === "paid") {
       alert("Thanh toán thành công! Thông tin account đã được gửi về email.");
       router.push("/");
     }
-  }, [order, router]);
+  }, [displayedOrder, router]);
 
   // Countdown timer
   useEffect(() => {
@@ -121,7 +136,7 @@ export default function PaymentPage() {
     );
   }
 
-  if (!order) {
+  if (!displayedOrder) {
     return (
       <div className="min-h-screen bg-zinc-50 py-12 dark:bg-black">
         <div className="container mx-auto px-4">
@@ -134,6 +149,8 @@ export default function PaymentPage() {
       </div>
     );
   }
+
+  const order = displayedOrder;
 
   return (
     <div className="min-h-screen bg-zinc-50 py-12 dark:bg-black">
@@ -168,6 +185,17 @@ export default function PaymentPage() {
               </p>
               <p className="mt-2 text-sm">
                 Vui lòng tạo đơn hàng mới để tiếp tục
+              </p>
+            </div>
+          </div>
+        )}
+
+        {order.status === "failed" && (
+          <div className="mb-6 rounded-lg border-2 border-red-300 bg-red-50 p-4 dark:border-red-700 dark:bg-red-950">
+            <div className="text-center text-red-700 dark:text-red-300">
+              <p className="text-lg font-semibold">Thanh toán chưa được xử lý</p>
+              <p className="mt-2 text-sm">
+                {order.failureReason || "Hệ thống gặp lỗi khi xác nhận thanh toán. Vui lòng kiểm tra email hoặc liên hệ hỗ trợ."}
               </p>
             </div>
           </div>
