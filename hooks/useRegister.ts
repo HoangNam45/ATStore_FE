@@ -75,7 +75,7 @@ export const useRegister = () => {
       });
 
       // Check if this is a provider link (existing account)
-      const user = response.data.user;
+      const user = response.user;
       if (user.providers.length > 1 && !user.providers.includes("google")) {
         // This shouldn't happen, but just in case
         console.info("Google account linked to existing account");
@@ -114,7 +114,7 @@ export const useRegister = () => {
       form.setError("root", {
         message: getErrorMessage(
           err,
-          "Đăng nhập với Google thất bại. Vui lòng thử lại."
+          "Đăng nhập với Google thất bại. Vui lòng thử lại.",
         ),
       });
     }
@@ -138,7 +138,7 @@ export const useRegister = () => {
       });
 
       // Check if this is a provider link (existing account)
-      const user = response.data.user;
+      const user = response.user;
       if (user.providers.length > 1 && !user.providers.includes("facebook")) {
         // This shouldn't happen, but just in case
         console.info("Facebook account linked to existing account");
@@ -177,7 +177,7 @@ export const useRegister = () => {
       form.setError("root", {
         message: getErrorMessage(
           err,
-          "Đăng nhập với Facebook thất bại. Vui lòng thử lại."
+          "Đăng nhập với Facebook thất bại. Vui lòng thử lại.",
         ),
       });
     }

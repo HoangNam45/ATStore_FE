@@ -6,7 +6,6 @@ import { AuthProvider } from "@/components/providers/AuthProvider";
 import { Header } from "@/components/Layout/Header/Header";
 import { SakuraPetals } from "@/components/Theme/sakura-petals";
 import { Footer } from "@/components/Layout/Footer/Footer";
-import { MaintenancePage } from "@/components/MaintenancePage";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

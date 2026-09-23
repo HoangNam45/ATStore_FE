@@ -49,7 +49,7 @@ export const useLogin = () => {
 
       // Only add role to user object if it's admin
       const userData = {
-        ...response.data.user,
+        ...response.user,
         ...(role === "admin" && { role }),
       };
 
@@ -60,8 +60,8 @@ export const useLogin = () => {
       setError(
         getErrorMessage(
           err,
-          "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu."
-        )
+          "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.",
+        ),
       );
     } finally {
       setLoading(false);
@@ -89,7 +89,7 @@ export const useLogin = () => {
       });
 
       // Check if this is a provider link (existing account)
-      const user = response.data.user;
+      const user = response.user;
       if (user.providers.length > 1 && !user.providers.includes("google")) {
         // This shouldn't happen, but just in case
         console.info("Google account linked to existing account");
@@ -117,7 +117,7 @@ export const useLogin = () => {
         setError(
           `Email ${
             email || "này"
-          } đã được đăng ký với phương thức đăng nhập khác (Facebook). Vui lòng đăng nhập bằng Facebook, sau đó bạn có thể liên kết thêm Google trong cài đặt tài khoản.`
+          } đã được đăng ký với phương thức đăng nhập khác (Facebook). Vui lòng đăng nhập bằng Facebook, sau đó bạn có thể liên kết thêm Google trong cài đặt tài khoản.`,
         );
         return;
       }
@@ -126,7 +126,10 @@ export const useLogin = () => {
       console.error("Google login error:", err);
 
       setError(
-        getErrorMessage(err, "Đăng nhập với Google thất bại. Vui lòng thử lại.")
+        getErrorMessage(
+          err,
+          "Đăng nhập với Google thất bại. Vui lòng thử lại.",
+        ),
       );
     } finally {
       setLoading(false);
@@ -153,7 +156,7 @@ export const useLogin = () => {
       });
 
       // Check if this is a provider link (existing account)
-      const user = response.data.user;
+      const user = response.user;
       if (user.providers.length > 1 && !user.providers.includes("facebook")) {
         // This shouldn't happen, but just in case
         console.info("Facebook account linked to existing account");
@@ -181,7 +184,7 @@ export const useLogin = () => {
         setError(
           `Email ${
             email || "này"
-          } đã được đăng ký với phương thức đăng nhập khác (Google). Vui lòng đăng nhập bằng Google, sau đó bạn có thể liên kết thêm Facebook trong cài đặt tài khoản.`
+          } đã được đăng ký với phương thức đăng nhập khác (Google). Vui lòng đăng nhập bằng Google, sau đó bạn có thể liên kết thêm Facebook trong cài đặt tài khoản.`,
         );
         return;
       }
@@ -192,8 +195,8 @@ export const useLogin = () => {
       setError(
         getErrorMessage(
           err,
-          "Đăng nhập với Facebook thất bại. Vui lòng thử lại."
-        )
+          "Đăng nhập với Facebook thất bại. Vui lòng thử lại.",
+        ),
       );
     } finally {
       setLoading(false);

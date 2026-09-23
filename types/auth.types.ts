@@ -36,32 +36,27 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  success: boolean;
-  data: {
-    message: string;
-    user: {
-      uid: string;
-      email: string;
-      displayName: string;
-      photoURL?: string;
-      providers: Array<"email" | "google" | "facebook">;
-      emailVerified: boolean;
-      createdAt: {
-        _seconds: number;
-        _nanoseconds: number;
-      };
-      updatedAt: {
-        _seconds: number;
-        _nanoseconds: number;
-      };
-      lastLoginAt?: {
-        _seconds: number;
-        _nanoseconds: number;
-      };
+  message: string;
+  user: {
+    uid: string;
+    email: string;
+    displayName: string;
+    photoURL?: string;
+    providers: Array<"email" | "google" | "facebook">;
+    emailVerified: boolean;
+    createdAt: {
+      _seconds: number;
+      _nanoseconds: number;
+    };
+    updatedAt: {
+      _seconds: number;
+      _nanoseconds: number;
+    };
+    lastLoginAt?: {
+      _seconds: number;
+      _nanoseconds: number;
     };
   };
-  timestamp: string;
-  path: string;
 }
 
 export interface SocialLoginRequest {
