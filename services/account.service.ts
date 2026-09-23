@@ -53,11 +53,24 @@ export interface GameAccountsGroup {
 }
 
 export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  timestamp: string;
-  path: string;
+  success?: boolean;
+  data?: T;
+  timestamp?: string;
+  path?: string;
 }
+
+const unwrapData = <T>(payload: T | ApiResponse<T>): T => {
+  if (
+    typeof payload === "object" &&
+    payload !== null &&
+    "data" in payload &&
+    payload.data !== undefined
+  ) {
+    return payload.data as T;
+  }
+
+  return payload as T;
+};
 
 export const accountService = {
   async createAccount(data: CreateAccountData) {
@@ -108,16 +121,15 @@ export const accountService = {
   async getAllAccountsGroupedByGame(): Promise<GameAccountsGroup[]> {
     const idToken = await getCurrentUserToken();
 
-    const response = await axiosAuthClient.get<ApiResponse<AccountList[]>>(
-      "/account/owner/all",
-      {
-        headers: {
-          Authorization: `Bearer ${idToken}`,
-        },
+    const response = await axiosAuthClient.get<
+      ApiResponse<AccountList[]> | AccountList[]
+    >("/account/owner/all", {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
       },
-    );
+    });
 
-    const accountLists = response.data.data;
+    const accountLists = unwrapData(response.data);
 
     // Group by game slug
     const groupedMap = new Map<string, GameAccountsGroup>();
@@ -207,23 +219,34 @@ export const accountService = {
   async getDashboardStats() {
     const idToken = await getCurrentUserToken();
     const response = await axiosAuthClient.get<
-      ApiResponse<{
-        totalAccounts: number;
-        soldAccounts: number;
-        revenue: number;
-        gameStats: Array<{
-          name: string;
-          total: number;
-          sold: number;
+      | ApiResponse<{
+          totalAccounts: number;
+          soldAccounts: number;
           revenue: number;
-        }>;
-      }>
+          gameStats: Array<{
+            name: string;
+            total: number;
+            sold: number;
+            revenue: number;
+          }>;
+        }>
+      | {
+          totalAccounts: number;
+          soldAccounts: number;
+          revenue: number;
+          gameStats: Array<{
+            name: string;
+            total: number;
+            sold: number;
+            revenue: number;
+          }>;
+        }
     >("/account/owner/dashboard/stats", {
       headers: {
         Authorization: `Bearer ${idToken}`,
       },
     });
-    return response.data.data;
+    return unwrapData(response.data);
   },
 
   async addAccountToCategory(

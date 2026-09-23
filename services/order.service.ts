@@ -3,32 +3,61 @@ import { CreateOrderRequest, Order } from "@/types/order.types";
 import { getCurrentUserToken } from "@/lib/firebase";
 
 interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  timestamp: string;
-  path: string;
+  success?: boolean;
+  data?: T;
+  timestamp?: string;
+  path?: string;
 }
+
+interface UserOrdersResponse {
+  success?: boolean;
+  data?: Order[];
+  userOrders?: Order[];
+  timestamp?: string;
+  path?: string;
+}
+
+interface AdminOrdersResponse {
+  orders: Order[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+const unwrapData = <T>(payload: T | ApiResponse<T>): T => {
+  if (
+    typeof payload === "object" &&
+    payload !== null &&
+    "data" in payload &&
+    payload.data !== undefined
+  ) {
+    return payload.data as T;
+  }
+
+  return payload as T;
+};
 
 export const orderService = {
   /**
    * Create a new order
    */
   async createOrder(data: CreateOrderRequest): Promise<Order> {
-    const response = await axiosClient.post<ApiResponse<Order>>(
+    const response = await axiosClient.post<ApiResponse<Order> | Order>(
       "/order/create",
       data
     );
-    return response.data.data;
+    return unwrapData(response.data);
   },
 
   /**
    * Get order by ID
    */
   async getOrder(orderId: string): Promise<Order> {
-    const response = await axiosClient.get<ApiResponse<Order>>(
+    const response = await axiosClient.get<ApiResponse<Order> | Order>(
       `/order/${orderId}`
     );
-    return response.data.data;
+    return unwrapData(response.data);
   },
 
   /**
@@ -36,7 +65,9 @@ export const orderService = {
    */
   async getUserOrders(): Promise<Order[]> {
     const token = await getCurrentUserToken();
-    const response = await axiosClient.get<ApiResponse<Order[]>>(
+    const response = await axiosClient.get<
+      UserOrdersResponse | ApiResponse<Order[]> | Order[]
+    >(
       "/order/user/my-orders",
       {
         headers: {
@@ -44,7 +75,16 @@ export const orderService = {
         },
       }
     );
-    return response.data.data;
+
+    const payload = response.data;
+    const orders = Array.isArray(payload)
+      ? payload
+      : payload.data ?? payload.userOrders;
+    if (!orders) {
+      throw new Error("API không trả về danh sách userOrders hợp lệ");
+    }
+
+    return orders;
   },
 
   /**
@@ -62,7 +102,7 @@ export const orderService = {
     page: number;
     limit: number;
     totalPages: number;
-  }> {
+  }): Promise<AdminOrdersResponse> {
     const token = await getCurrentUserToken();
     const queryParams = new URLSearchParams({
       page: params.page.toString(),
@@ -74,18 +114,12 @@ export const orderService = {
     if (params.endDate) queryParams.append("endDate", params.endDate);
 
     const response = await axiosClient.get<
-      ApiResponse<{
-        orders: Order[];
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-      }>
+      ApiResponse<AdminOrdersResponse> | AdminOrdersResponse
     >(`/order/admin/all-orders?${queryParams.toString()}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data.data;
+    return unwrapData(response.data);
   },
 };
