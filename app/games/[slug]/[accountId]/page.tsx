@@ -38,14 +38,9 @@ export default function AccountDetailPage() {
 
   const game = games.find((g) => g.slug === slug);
 
-  const { data: account, isLoading } = useQuery({
+  const { data: account, isLoading } = useQuery<Account>({
     queryKey: ["account", accountId],
-    queryFn: async () => {
-      const data = await accountService.getAccountById(accountId);
-      // Handle both direct data and wrapped response
-      const accountData = data.data || data;
-      return accountData as Account;
-    },
+    queryFn: () => accountService.getAccountById(accountId),
     enabled: !!accountId,
   });
 

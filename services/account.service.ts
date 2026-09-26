@@ -1,5 +1,6 @@
 import { axiosAuthClient } from "@/lib/axios/axiosAuthClient";
 import { getCurrentUserToken } from "@/lib/firebase";
+import { Account } from "@/types/account.types";
 
 export interface CreateAccountData {
   game: string;
@@ -52,28 +53,32 @@ export interface GameAccountsGroup {
   lists: AccountList[];
 }
 
-export interface ApiResponse<T> {
-  success?: boolean;
-  data?: T;
-  timestamp?: string;
-  path?: string;
+/**
+ * Payload BE trả cho các thao tác quản trị list/category/account.
+ */
+export interface ActionResult {
+  success: boolean;
+  message: string;
 }
 
-const unwrapData = <T>(payload: T | ApiResponse<T>): T => {
-  if (
-    typeof payload === "object" &&
-    payload !== null &&
-    "data" in payload &&
-    payload.data !== undefined
-  ) {
-    return payload.data as T;
-  }
+export interface DashboardStats {
+  totalAccounts: number;
+  soldAccounts: number;
+  revenue: number;
+  gameStats: Array<{
+    name: string;
+    total: number;
+    sold: number;
+    revenue: number;
+  }>;
+}
 
-  return payload as T;
-};
-
+/**
+ * Envelope { success, data, timestamp, path } đã được bóc ở
+ * lib/axios/interceptors/response.ts, nên mọi hàm trong này trả thẳng payload của BE.
+ */
 export const accountService = {
-  async createAccount(data: CreateAccountData) {
+  async createAccount(data: CreateAccountData): Promise<{ id: string }> {
     // Get Firebase ID Token
     const idToken = await getCurrentUserToken();
 
@@ -97,39 +102,48 @@ export const accountService = {
     // Add categories as JSON string
     formData.append("categories", JSON.stringify(data.categories));
 
-    const response = await axiosAuthClient.post("/account/create", formData, {
-      headers: {
-        // Don't set Content-Type for multipart/form-data
-        // Let browser set it with the correct boundary
-        Authorization: `Bearer ${idToken}`,
+    const response = await axiosAuthClient.post<{ id: string }>(
+      "/account/create",
+      formData,
+      {
+        headers: {
+          // Don't set Content-Type for multipart/form-data
+          // Let browser set it with the correct boundary
+          Authorization: `Bearer ${idToken}`,
+        },
       },
-    });
+    );
 
     return response.data;
   },
 
-  async getAccountsByGame(game: string) {
-    const response = await axiosAuthClient.get(`/account/game/${game}`);
+  async getAccountsByGame(game: string): Promise<Account[]> {
+    const response = await axiosAuthClient.get<Account[]>(
+      `/account/game/${game}`,
+    );
     return response.data;
   },
 
-  async getAccountById(accountId: string) {
-    const response = await axiosAuthClient.get(`/account/${accountId}`);
+  async getAccountById(accountId: string): Promise<Account> {
+    const response = await axiosAuthClient.get<Account>(
+      `/account/${accountId}`,
+    );
     return response.data;
   },
 
   async getAllAccountsGroupedByGame(): Promise<GameAccountsGroup[]> {
     const idToken = await getCurrentUserToken();
 
-    const response = await axiosAuthClient.get<
-      ApiResponse<AccountList[]> | AccountList[]
-    >("/account/owner/all", {
-      headers: {
-        Authorization: `Bearer ${idToken}`,
+    const response = await axiosAuthClient.get<AccountList[]>(
+      "/account/owner/all",
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
       },
-    });
+    );
 
-    const accountLists = unwrapData(response.data);
+    const accountLists = response.data;
 
     // Group by game slug
     const groupedMap = new Map<string, GameAccountsGroup>();
@@ -149,9 +163,9 @@ export const accountService = {
     return Array.from(groupedMap.values());
   },
 
-  async updateListType(listId: string, type: string) {
+  async updateListType(listId: string, type: string): Promise<ActionResult> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.post(
+    const response = await axiosAuthClient.post<ActionResult>(
       "/account/list/update",
       {
         listId,
@@ -171,9 +185,9 @@ export const accountService = {
     categoryId: string,
     name: string,
     price: number,
-  ) {
+  ): Promise<ActionResult> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.post(
+    const response = await axiosAuthClient.post<ActionResult>(
       "/account/category/update",
       {
         listId,
@@ -196,9 +210,9 @@ export const accountService = {
     accountId: string,
     credentials: string,
     status: "available" | "sold",
-  ) {
+  ): Promise<ActionResult> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.post(
+    const response = await axiosAuthClient.post<ActionResult>(
       "/account/account/update",
       {
         listId,
@@ -216,46 +230,26 @@ export const accountService = {
     return response.data;
   },
 
-  async getDashboardStats() {
+  async getDashboardStats(): Promise<DashboardStats> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.get<
-      | ApiResponse<{
-          totalAccounts: number;
-          soldAccounts: number;
-          revenue: number;
-          gameStats: Array<{
-            name: string;
-            total: number;
-            sold: number;
-            revenue: number;
-          }>;
-        }>
-      | {
-          totalAccounts: number;
-          soldAccounts: number;
-          revenue: number;
-          gameStats: Array<{
-            name: string;
-            total: number;
-            sold: number;
-            revenue: number;
-          }>;
-        }
-    >("/account/owner/dashboard/stats", {
-      headers: {
-        Authorization: `Bearer ${idToken}`,
+    const response = await axiosAuthClient.get<DashboardStats>(
+      "/account/owner/dashboard/stats",
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
       },
-    });
-    return unwrapData(response.data);
+    );
+    return response.data;
   },
 
   async addAccountToCategory(
     listId: string,
     categoryId: string,
     credentials: string,
-  ) {
+  ): Promise<ActionResult> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.post(
+    const response = await axiosAuthClient.post<ActionResult>(
       "/account/account/add",
       {
         listId,
@@ -271,9 +265,13 @@ export const accountService = {
     return response.data;
   },
 
-  async deleteAccount(listId: string, categoryId: string, accountId: string) {
+  async deleteAccount(
+    listId: string,
+    categoryId: string,
+    accountId: string,
+  ): Promise<ActionResult> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.post(
+    const response = await axiosAuthClient.post<ActionResult>(
       "/account/account/delete",
       {
         listId,
@@ -289,19 +287,25 @@ export const accountService = {
     return response.data;
   },
 
-  async deleteList(listId: string) {
+  async deleteList(listId: string): Promise<ActionResult> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.delete(`/account/list/${listId}`, {
-      headers: {
-        Authorization: `Bearer ${idToken}`,
+    const response = await axiosAuthClient.delete<ActionResult>(
+      `/account/list/${listId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
       },
-    });
+    );
     return response.data;
   },
 
-  async updateListImages(listId: string, formData: FormData) {
+  async updateListImages(
+    listId: string,
+    formData: FormData,
+  ): Promise<ActionResult> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.post(
+    const response = await axiosAuthClient.post<ActionResult>(
       `/account/list/${listId}/images`,
       formData,
       {
@@ -313,9 +317,13 @@ export const accountService = {
     return response.data;
   },
 
-  async addCategoryToList(listId: string, name: string, price: number) {
+  async addCategoryToList(
+    listId: string,
+    name: string,
+    price: number,
+  ): Promise<ActionResult> {
     const idToken = await getCurrentUserToken();
-    const response = await axiosAuthClient.post(
+    const response = await axiosAuthClient.post<ActionResult>(
       "/account/category/add",
       {
         listId,

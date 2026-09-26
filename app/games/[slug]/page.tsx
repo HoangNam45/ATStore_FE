@@ -21,11 +21,7 @@ export default function GamePage() {
     isLoading,
   } = useQuery<Account[]>({
     queryKey: ["accounts", slug],
-    queryFn: async () => {
-      const response = await accountService.getAccountsByGame(slug);
-      const data = response.data || response;
-      return Array.isArray(data) ? data : [];
-    },
+    queryFn: () => accountService.getAccountsByGame(slug),
     enabled: !!slug,
   });
 

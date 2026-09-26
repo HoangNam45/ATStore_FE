@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setupResponseInterceptor } from "./interceptors/response";
 import { auth } from "@/lib/firebase";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -49,3 +50,8 @@ axiosAuthClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Bóc envelope tại đúng một chỗ (xem lib/axios/interceptors/response.ts).
+// Interceptor 401 ở trên vẫn nhận response lỗi nguyên vẹn.
+setupResponseInterceptor(axiosAuthClient);
+
